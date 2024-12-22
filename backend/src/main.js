@@ -1,4 +1,9 @@
+require("dotenv").config();
 const express = require('express');
+const Database = require("./db");
+
+// Connect to the database
+Database.Connect();
 
 // Create the react app
 const app = express();
