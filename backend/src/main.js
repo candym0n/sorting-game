@@ -20,7 +20,7 @@ app.get("/get-levels", async (req, res) => {
 // Get all of the sections in a level
 app.get("/get-sections", async (req, res) => {
     const level = req.query.level;
-    const result = await Database.Query("SELECT type, algorithm_id FROM `sections` WHERE level_id=? ORDER BY section_index ASC", [level]);
+    const result = await Database.Query("SELECT type, section_index, algorithm_id FROM `sections` WHERE level_id=? ORDER BY section_index ASC", [level]);
     res.json(result);
     res.status(200);
 })

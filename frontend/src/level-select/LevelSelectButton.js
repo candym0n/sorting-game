@@ -1,4 +1,5 @@
-import { Button, Col, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { Lock } from "lucide-react";
 
 const buttonStyle = {
@@ -15,9 +16,10 @@ const buttonStyle = {
 };
 
 export default function LevelSelectButton({ locked, index, name }) {
+    let sectionIndex = /* Calculuate the section index */ 1;
     return (
         <OverlayTrigger trigger="hover" placement="top" overlay={<Tooltip>{name}</Tooltip>}>
-            <span>
+            <Link className="undecorated-link" to={`/level/${index}/${sectionIndex}`}>
                 <Button style={buttonStyle} variant={locked ? "secondary" : "primary"} disabled={locked} className="position-relative">
                         {index}
                         {locked && <Lock className="position-absolute" style={{
@@ -27,7 +29,7 @@ export default function LevelSelectButton({ locked, index, name }) {
                             height: "20%"
                         }} />}
                 </Button>
-            </span>
+            </Link>
         </OverlayTrigger>
     )
 }
