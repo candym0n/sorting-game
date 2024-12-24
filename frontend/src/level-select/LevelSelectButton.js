@@ -15,21 +15,25 @@ const buttonStyle = {
     lineHeight: 1,
 };
 
-export default function LevelSelectButton({ locked, index, name }) {
-    let sectionIndex = /* Calculuate the section index */ 1;
+export default function LevelSelectButton({ locked, sectionIndex, index, name }) {
     return (
-        <OverlayTrigger trigger="hover" placement="top" overlay={<Tooltip>{name}</Tooltip>}>
-            <Link className="undecorated-link" to={`/level/${index}/${sectionIndex}`}>
-                <Button style={buttonStyle} variant={locked ? "secondary" : "primary"} disabled={locked} className="position-relative">
-                        {index}
-                        {locked && <Lock className="position-absolute" style={{
-                            bottom: "10%",
-                            right: "10%",
-                            width: "20%",
-                            height: "20%"
-                        }} />}
-                </Button>
-            </Link>
+        <OverlayTrigger placement="top" overlay={<Tooltip>{name}</Tooltip>}>
+            <Button 
+                style={buttonStyle}
+                variant={locked ? "secondary" : "primary"}
+                disabled={locked}
+                className="position-relative"
+                as={Link}
+                to={`/level/${index}/${sectionIndex}`}
+            >
+                    {index}
+                    {locked && <Lock className="position-absolute" style={{
+                        bottom: "10%",
+                        right: "10%",
+                        width: "20%",
+                        height: "20%"
+                    }} />}
+            </Button>
         </OverlayTrigger>
     )
 }

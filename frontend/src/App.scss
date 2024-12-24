@@ -1,5 +1,6 @@
-.undecorated-link {
-    text-decoration: none;
+// Ensure that "disabled" links are not interactive in ANY way
+a[aria-disabled="true"] {
+    pointer-events: none;
 }
 
 @import 'bootstrap/dist/css/bootstrap.min.css'

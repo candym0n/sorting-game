@@ -10,7 +10,7 @@ export default function LevelSelect({ levels }) {
                     <Row className="g-4">
                         {levels.map((level) => (
                             <Col key={"level-select-" + level.index} xs={6} sm={3} md={3} lg={2}>
-                                <LevelSelectButton key={"level-select-" + level} locked={Math.random() > 0.5} index={level.index} name={level.name} />
+                                <LevelSelectButton key={"level-select-" + level} locked={Math.random() > 0.5} index={level.index} name={level.name} sectionIndex={1} />
                             </Col>
                         ))}
                     </Row>
