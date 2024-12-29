@@ -20,7 +20,7 @@ app.get("/get-levels", async (req, res) => {
 // Get all of the sections in a level
 app.get("/get-sections", async (req, res) => {
     const level = req.query.level;
-    const sectionData = await Database.Query("SELECT type, section_index, algorithm_id FROM `sections` WHERE level_id=? ORDER BY section_index ASC", [level]);
+    const sectionData = await Database.Query("SELECT type, required, section_index, algorithm_id FROM `sections` WHERE level_id=? ORDER BY section_index ASC", [level]);
     try {
         let result = await Promise.all(sectionData.map(async section => {
             let sortData = await Database.Query("SELECT name, space_complexity, time_complexity, implementation FROM `algorithms` WHERE id=?", [section.algorithm_id]);
@@ -35,6 +35,7 @@ app.get("/get-sections", async (req, res) => {
             return {
                 index: section.section_index,
                 type: section.type,
+                required: section.required,
                 sort: {
                     name: sortData.name,
                     space: sortData.space_complexity,
