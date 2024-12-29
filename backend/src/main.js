@@ -20,10 +20,48 @@ app.get("/get-levels", async (req, res) => {
 // Get all of the sections in a level
 app.get("/get-sections", async (req, res) => {
     const level = req.query.level;
-    const result = await Database.Query("SELECT type, section_index, algorithm_id FROM `sections` WHERE level_id=? ORDER BY section_index ASC", [level]);
-    res.json(result);
-    res.status(200);
-})
+    const sectionData = await Database.Query("SELECT type, section_index, algorithm_id FROM `sections` WHERE level_id=? ORDER BY section_index ASC", [level]);
+    try {
+        let result = await Promise.all(sectionData.map(async section => {
+            let sortData = await Database.Query("SELECT name, space_complexity, time_complexity, implementation FROM `algorithms` WHERE id=?", [section.algorithm_id]);
+            if (!sortData.length) {
+                throw "Cannot find sorting algorithm with id " + section.algorithm_id;
+            }
+            sortData = sortData[0];
+            const explanation = await Database.Query("SELECT description FROM `explanations` WHERE type=? AND sort_id=?", [section.type, section.algorithm_id]);
+            if (!explanation.length) {
+                throw "Cannot find explanation for " + section.type + " with sort of id " + sortData.id;
+            }
+            return {
+                index: section.section_index,
+                type: section.type,
+                sort: {
+                    name: sortData.name,
+                    space: sortData.space_complexity,
+                    time: sortData.time_complexity,
+                    implementation: sortData.implementation
+                },
+                description: explanation[0].description
+            }
+        }));
+
+        res.json(result);
+        res.status(200);
+    } catch (err) {
+        res.json(err);
+        res.status(500);
+    }
+});
+
+// Get 4 random sorting algorithms - one of them being 'correct'
+app.get("/four-random-sorts", async (req, res) => {
+    let include = req.query.include;
+    const result = await Database.Query("SELECT id, name FROM algorithms WHERE id = ? UNION ALL SELECT id, name FROM algorithms WHERE id != ? ORDER BY RAND() LIMIT 4;", [include, include]);
+    res.send(result.map(a=>({
+        name: a.name,
+        correct: a.id == include
+    })));
+});
 
 // Listen on port 3000
 app.listen(3001);
