@@ -1,6 +1,6 @@
 import './App.scss';
 import LevelSelectScreen from './level-select/LevelSelectScreen';
-import SectionScreen from './levels/SectionScreen';
+import LevelScreen from './levels/LevelScreen';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/level-select" element={<LevelSelectScreen />} />
-                <Route path="/level/:level/:section" element={<SectionScreen />} />
+                <Route path="/level/:level" element={<LevelScreen />} />
             </Routes>
         </Router>
     );

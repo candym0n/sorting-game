@@ -15,7 +15,7 @@ const buttonStyle = {
     lineHeight: 1,
 };
 
-export default function LevelSelectButton({ locked, sectionIndex, index, name }) {
+export default function LevelSelectButton({ locked, index, name }) {
     return (
         <OverlayTrigger placement="top" overlay={<Tooltip>{name}</Tooltip>}>
             <Button 
@@ -24,7 +24,7 @@ export default function LevelSelectButton({ locked, sectionIndex, index, name })
                 disabled={locked}
                 className="position-relative"
                 as={Link}
-                to={`/level/${index}/${sectionIndex}`}
+                to={`/level/${index}`}
             >
                     {index}
                     {locked && <Lock className="position-absolute" style={{
