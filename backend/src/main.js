@@ -53,10 +53,18 @@ app.get("/get-sections", async (req, res) => {
     }
 });
 
+
+
 // Get 4 random sorting algorithms - one of them being 'correct'
 app.get("/four-random-sorts", async (req, res) => {
-    let include = req.query.include;
-    const result = await Database.Query("SELECT id, name FROM algorithms WHERE id = ? UNION ALL SELECT id, name FROM algorithms WHERE id != ? ORDER BY RAND() LIMIT 4;", [include, include]);
+    let include = req.query.include.split(",");
+    include = include[Math.floor(Math.random() * include.length)];
+    console.log(include)
+    const result = await Database.Query("SELECT id, name FROM algorithms WHERE id = ? UNION ALL SELECT id, name FROM algorithms WHERE id != ? LIMIT 4;", [include, include]);
+    for (let i = result.length - 1; i > 0; --i) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
     res.send(result.map(a=>({
         name: a.name,
         correct: a.id == include
