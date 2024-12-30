@@ -29,6 +29,7 @@ export default function LevelScreen() {
     const [error, setError] = useState(null);
     const [sections, setSections] = useState({});
     const [currentSection, setCurrentSection] = useState(0);
+    const [canProceed, setCanProceed] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -53,13 +54,13 @@ export default function LevelScreen() {
             <Container className="py-8 h-100">
                 <Card className="bg-white rounded-xl shadow-lg p-6 h-100">
                     <Card.Header>
-                        <h1 className="text-3xl font-bold text-center mb-8">Section {level}.{currentSection}</h1>    
+                        <h1 className="text-3xl font-bold text-center mb-8">Section {level}.{currentSection + 1}</h1>    
                     </Card.Header>
                     <Card.Body>
-                        <SectionScreen data={sections[currentSection]}/>
+                        <SectionScreen setCanProceed={setCanProceed} data={sections[currentSection]}/>
                     </Card.Body>
                     <Card.Footer>
-                        <Button style={{width:"100%"}}>Next</Button>
+                        <Button disabled={!canProceed} style={{width:"100%"}}>Next</Button>
                     </Card.Footer>
                 </Card>
             </Container>
