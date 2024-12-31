@@ -7,15 +7,14 @@ export default function SortingVisualizer({ list = [], height, selected = [] }) 
           <Row className="align-items-end justify-content-start" style={{ height: `${height + 20}px` }}>
               {list.map((value, index) => (
                     <Col 
-                        key={index} 
+                        key={"visualize-" + index} 
                         style={{padding:0}}
                     >
                         <div
                             style={{
                                 height: `${(value / MAX_VALUE) * height}px`,
                                 backgroundColor: selected.includes(index) ? '#dc3545' : '#0d6efd',
-                                width: '100%',
-                                transition: 'height 0.3s ease',
+                                width: '100%'
                             }}
                         />
                     </Col>

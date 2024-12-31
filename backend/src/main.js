@@ -91,7 +91,7 @@ app.get("/get-sort-data", async (req, res) => {
         implementation: result[0]?.implementation,
         space: result[0]?.space_complexity,
         time: result[0]?.time_complexity,
-        description: explanation[0].description,
+        description: explanation[0]?.description || "Could not find explanation",
         name: result[0]?.name
     });
     res.status(200);

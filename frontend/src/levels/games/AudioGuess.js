@@ -1,19 +1,7 @@
 import Sorter from "../Sorter";
-import { useState, useEffect } from "react";
 import { Container, Form, Col, Row, Button} from "react-bootstrap";
-import { PlayCircle, PauseCircle } from "lucide-react";
-import { MAX_VALUE } from "./constants";
 
-export default function AudioGuess({ data, showAnswers, gotCorrect, gotIncorrect }) {
-    const [volume, setVolume] = useState(0.5);
-    const [delay, setDelay] = useState(200);
-    const [list, setList] = useState([]);
-    const [play, setPlay] = useState(false);
-
-    useEffect(() => {
-        for (let i = 0; i < 100; ++i) setList(a=>[...a,Math.random() * MAX_VALUE]);
-    }, [])
-
+export default function AudioGuess({ data, algoData, showAnswers, gotCorrect, gotIncorrect }) {
     const answer = ({ target }) => {
         if (target.ariaLabel == data[1]) gotCorrect();
         else gotIncorrect("Incorrect...");
@@ -21,30 +9,10 @@ export default function AudioGuess({ data, showAnswers, gotCorrect, gotIncorrect
 
     return (
         <Container>
-            <Sorter list={list} code={data.implementation} delay={delay} volume={volume} display audio></Sorter>
-            <Form.Group>
-                <Row>
-                    <Col>
-                        <Form.Label style={{ fontSize: "1.5rem" }}>Volume: {Math.floor(100 * volume)}%</Form.Label>
-                        <Form.Range min={0} max={1} step={0.01} onChange={(e)=>setVolume(e.target.value)}/>
-                    </Col>
-                    <Col>
-                        <Form.Label style={{ fontSize: "1.5rem" }}>Delay: {Math.floor(delay) / 1000}s</Form.Label>
-                        <Form.Range min={100} max={1000} step={10} onChange={(e)=>setDelay(e.target.value)}/>
-                    </Col>
-                    <Col>
-                        <Row xs={3}>
-                            <br />
-                        </Row>
-                        <Row xs={1}>
-                            <Button className="w-100" variant="primary" onClick={()=>setPlay(a=>!a)}>
-                                {play ? "Pause " : "Play "}
-                                {play ? <PauseCircle /> : <PlayCircle /> }
-                            </Button>
-                        </Row>
-                    </Col>
-                </Row>
-            </Form.Group>
+            <Sorter 
+                code={algoData.implementation}
+                audio display
+            />
             <Form.Group className="mt-5">
                 <Col>
                     <Row>

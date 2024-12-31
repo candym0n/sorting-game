@@ -1,6 +1,6 @@
 import AudioGuess from "./games/AudioGuess";
 import { Spinner, Button } from "react-bootstrap";
-import { useState, useEffect, forwardRef, useRef } from "react"
+import React, { useState, useEffect, forwardRef, useRef } from "react"
 
 const StartingScreen = ({setStarted}) => (
     <div className="min-h-screen bg-gray-200 d-flex align-items-center justify-content-center">
@@ -27,7 +27,7 @@ const ErrorScreen = ({ error, onRetry }) => (
     </div>
 );
 
-export default function Game({ setExplanation, data, showAnswers, gotCorrect, gotIncorrect, ref, setStarted, started }) {
+const Game = React.memo(function Game({ setExplanation, data, showAnswers, gotCorrect, gotIncorrect, ref, setStarted, started }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [gameData, setGameData] = useState(null);
@@ -41,8 +41,7 @@ export default function Game({ setExplanation, data, showAnswers, gotCorrect, go
             const response = await fetch(`http://localhost:3001/get-random-question?type=${data.type}&include=${data.ids}`).then(a=>a.json());
             setGameData(response[0]);
             const algoResponse = await fetch(`http://localhost:3001/get-sort-data?id=${response[1]}&type=${data.type}`).then(a=>a.json());
-            setAlgoData(response[1]);
-            console.log(response)
+            setAlgoData(algoResponse);
             setExplanation(algoResponse.description);
         } catch(err) {
             setError(err.message);
@@ -60,7 +59,7 @@ export default function Game({ setExplanation, data, showAnswers, gotCorrect, go
     let mainGame;
     switch (data.type) {
         case "algo_sound":
-            mainGame = <AudioGuess data={gameData} showAnswers={showAnswers} gotCorrect={gotCorrect} gotIncorrect={gotIncorrect} />
+            mainGame = <AudioGuess algoData={algoData} data={gameData} showAnswers={showAnswers} gotCorrect={gotCorrect} gotIncorrect={gotIncorrect} />
             break;
         default:
             throw "Cannot find game " + data.type;
@@ -72,4 +71,8 @@ export default function Game({ setExplanation, data, showAnswers, gotCorrect, go
         !started ? <StartingScreen setStarted={setStarted} /> :
         mainGame
     )
-}
+}, (prev, next) => {
+    return Object.is(prev.started, next.started) && !next.showAnswers;
+});
+
+export default Game;

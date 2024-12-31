@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Response from "./Response";
 import Game from "./Game";
 
@@ -20,7 +20,7 @@ export default function SectionScreen({ data, setCanProceed }) {
     const [timer, setTimer] = useState(data.limit);
     const [explanation, setExplanation] = useState("");
     const [started, setStarted] = useState(false);
-    let gameRef = {};
+    let gameRef = useRef({});
 
     useEffect(() => {
         if (answered || !started) {
@@ -29,7 +29,7 @@ export default function SectionScreen({ data, setCanProceed }) {
         }
 
         const id = setInterval(() => {
-            setTimer((prev) => --prev)
+            setTimer((prev) => --prev);
         }, 1000);
 
         return () => clearInterval(id);
