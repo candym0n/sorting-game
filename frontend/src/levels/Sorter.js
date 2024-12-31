@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { MAX_VALUE } from "./games/constants";
 import Interpreter from "js-interpreter";
 import { Form, Button, Col, Row } from "react-bootstrap";
@@ -14,10 +14,15 @@ export default function Sorter({ display, audio, code }) {
     const [delay, setDelay] = useState(200);
     const [play, setPlay] = useState(false);
     const [list, setList] = useState([]);
+    const listRef = useRef(list);
+
+    useEffect(() => {
+        listRef.current = list;
+    }, [list]);
 
     useEffect(() => {
         setList([]);
-        for (let i = 1; i < 50; ++i) setList(a=>[...a, (50-i) / 50 * MAX_VALUE]);
+        for (let i = 0; i < 100; ++i) setList(a=>[...a, Math.random() * MAX_VALUE]);
     }, []);
 
 
@@ -31,7 +36,6 @@ export default function Sorter({ display, audio, code }) {
     }, []);
     const swap = (a, b, callback) => {
         if (a > list.length || b > list.length || a < 0 || b < 0) return void callback();
-        console.log("HELP")
         setList(prev=>{
             let copy = [...prev]
             let prevA = copy[a];
@@ -46,13 +50,21 @@ export default function Sorter({ display, audio, code }) {
         setTimeout(callback, 1);
     };
 
+    const getList = (a) => {
+        return listRef.current[a];
+    }
+
     const get = (a) => {
-        return list[a];
+        return getList(a)
     };
 
     const length = () => {
         return list.length;
     };
+
+    const debug = (msg) => {
+        console.log(msg);
+    }
 
     useEffect(() => {
         if (interpreter || !list.length) return;
@@ -61,11 +73,11 @@ export default function Sorter({ display, audio, code }) {
             int.setProperty(global, 'length', int.createNativeFunction(length));
             int.setProperty(global, "get", int.createNativeFunction(get));
             int.setProperty(global, "swap", int.createAsyncFunction(swap));
+            int.setProperty(global, "debug", int.createNativeFunction(debug));
         };
 
         setInterpreter(new Interpreter(code || "", init));
     }, [list]);
-    const [use, setUse] = useState(0);
     const nextStep = async (token, play) => {
         while (1) {
             if (token.stop) {
