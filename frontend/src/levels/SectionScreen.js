@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import TrueFalse from "./games/TrueFalse";
 import Response from "./Response";
+import Game from "./Game";
 
 function parseTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -18,9 +18,13 @@ export default function SectionScreen({ data, setCanProceed }) {
     const [message, setMessage] = useState("");
     const [streak, setStreak] = useState(0);
     const [timer, setTimer] = useState(data.limit);
+    const [explanation, setExplanation] = useState("");
+    const [started, setStarted] = useState(false);
+    let gameRef = {};
 
     useEffect(() => {
-        if (answered) {
+        if (answered || !started) {
+            setTimer(data.limit);
             return;
         }
 
@@ -29,7 +33,7 @@ export default function SectionScreen({ data, setCanProceed }) {
         }, 1000);
 
         return () => clearInterval(id);
-    }, [answered]);
+    }, [answered, started]);
 
     useEffect(() => {
         if (timer <= 0) {
@@ -56,7 +60,8 @@ export default function SectionScreen({ data, setCanProceed }) {
 
     const tryAgain = () => {
         setAnswered(false);
-        setTimer(data.limit)
+        setTimer(data.limit);
+        if (gameRef) gameRef.newGame();
     }
 
     return (
@@ -66,13 +71,27 @@ export default function SectionScreen({ data, setCanProceed }) {
                 <h3>{streak}/{data.required}</h3>
             </div>
             <div className="mb-4">
-                <TrueFalse showAnswers={answered} gotCorrect={onCorrect} gotIncorrect={onIncorrect}/>
+                <Game 
+                    ref={gameRef} 
+                    setStarted={setStarted} 
+                    setExplanation={setExplanation} 
+                    data={data} showAnswers={answered} 
+                    gotCorrect={onCorrect} 
+                    gotIncorrect={onIncorrect} 
+                    started={started}
+                />
             </div>
             {
             answered && <>
                 <hr className="my-4"></hr>
                 <div className="mb-4">
-                    <Response completed={streak >= data.required} tryAgain={tryAgain} correct={correct} reason={correct ? "Correct!" : message} explanation={data.description} />
+                    <Response 
+                        completed={streak >= data.required} 
+                        tryAgain={tryAgain} 
+                        correct={correct} 
+                        reason={correct ? "Correct!" : message} 
+                        explanation={explanation} 
+                    />
                 </div>
             </>
             }

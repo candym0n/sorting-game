@@ -1,8 +1,7 @@
-import { Container, Row, Card, Col, Button, Spinner } from "react-bootstrap";
+import { Container, Card, Button, Spinner } from "react-bootstrap";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import TrueFalse from "./games/TrueFalse";
-import Response from "./Response";
+import { useNavigate } from "react-router";
 import SectionScreen from "./SectionScreen";
 
 const LoadingScreen = () => (
@@ -30,6 +29,7 @@ export default function LevelScreen() {
     const [sections, setSections] = useState({});
     const [currentSection, setCurrentSection] = useState(0);
     const [canProceed, setCanProceed] = useState(false);
+    const navigate = useNavigate();
 
     const fetchData = async () => {
         try {
@@ -49,6 +49,14 @@ export default function LevelScreen() {
         fetchData();
     }, []);
 
+    const nextSection = () => {
+        if (currentSection + 1 >= sections.length) {
+            navigate("/level-select")
+        } else {
+            setCurrentSection(a=>++a);
+        }
+    }
+
     let mainBody = (
         <div className="bg-gray-200 p-4" style={{height: "100%"}}>
             <Container className="py-8 h-100">
@@ -60,7 +68,7 @@ export default function LevelScreen() {
                         <SectionScreen setCanProceed={setCanProceed} data={sections[currentSection]}/>
                     </Card.Body>
                     <Card.Footer>
-                        <Button disabled={!canProceed} style={{width:"100%"}}>Next</Button>
+                        <Button onClick={nextSection} disabled={!canProceed} style={{width:"100%"}}>Next</Button>
                     </Card.Footer>
                 </Card>
             </Container>
