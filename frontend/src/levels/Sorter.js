@@ -11,14 +11,19 @@ export default function Sorter({ display, audio, code }) {
     const [interpreter, setInterpreter] = useState(null);
     const [selected, setSelected] = useState([]);
     const [volume, setVolume] = useState(0.5);
-    const [delay, setDelay] = useState(200);
+    const [delay, setDelay] = useState(1);
     const [play, setPlay] = useState(false);
     const [list, setList] = useState([]);
     const listRef = useRef(list);
+    const volumeRef = useRef(volume);
 
     useEffect(() => {
         listRef.current = list;
     }, [list]);
+
+    useEffect(() => {
+        volumeRef.current = volume;
+    }, [volume]);
 
     useEffect(() => {
         setList([]);
@@ -115,6 +120,7 @@ export default function Sorter({ display, audio, code }) {
     const playSound = (height) => {
         if (!audioContext) return;
         if (!height) return;
+        if (volumeRef.current < 0.05) return;
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 
@@ -126,7 +132,7 @@ export default function Sorter({ display, audio, code }) {
         oscillator.type = 'square';
         
         gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-        gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+        gainNode.gain.linearRampToValueAtTime(volumeRef.current, audioContext.currentTime + 0.01);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
         
         oscillator.start();
@@ -144,7 +150,7 @@ export default function Sorter({ display, audio, code }) {
                     </Col>
                     <Col>
                         <Form.Label style={{ fontSize: "1.5rem" }}>Delay: {Math.floor(delay) / 1000}s</Form.Label>
-                        <Form.Range min={1} max={1000} step={10} onChange={(e)=>setDelay(e.target.value)}/>
+                        <Form.Range defaultValue={1} min={1} max={1000} step={10} onChange={(e)=>setDelay(e.target.value)}/>
                     </Col>
                     <Col>
                         <Row xs={3}>
