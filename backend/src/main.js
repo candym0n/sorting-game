@@ -1,7 +1,11 @@
 require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const Database = require("./db");
+const userRoutes = require("./auth/userRoutes")
 
 // Connect to the database
 Database.Connect();
@@ -9,6 +13,18 @@ Database.Connect();
 // Create the react app
 const app = express();
 app.use(cors());
+app.use(cookieSession({
+    secret: process.env.SECRET_KEY,
+    cookie: {
+        secure: true,
+        httpOnly: true,
+        expires: false
+    }
+}));
+app.use(cookieParser());
+app.use(express.json());
+
+app.use('/user', userRoutes);
 
 // Get all of the levels (in order)
 app.get("/get-levels", async (req, res) => {
