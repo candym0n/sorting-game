@@ -38,9 +38,9 @@ const Game = React.memo(function Game({ setExplanation, data, showAnswers, gotCo
             setStarted(false);
             setLoading(true);
             setError(null);
-            const response = await fetch(`http://localhost:3001/get-random-question?type=${data.type}&include=${data.ids}`).then(a=>a.json());
+            const response = await fetch(`https://localhost:3001/get-random-question?type=${data.type}&include=${data.ids}`).then(a=>a.json());
             setGameData(response[0]);
-            const algoResponse = await fetch(`http://localhost:3001/get-sort-data?id=${response[1]}&type=${data.type}`).then(a=>a.json());
+            const algoResponse = await fetch(`https://localhost:3001/get-sort-data?id=${response[1]}&type=${data.type}`).then(a=>a.json());
             setAlgoData(algoResponse);
             setExplanation(algoResponse.description);
         } catch(err) {

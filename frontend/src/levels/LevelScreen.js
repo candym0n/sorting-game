@@ -35,7 +35,7 @@ export default function LevelScreen() {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`http://localhost:3001/get-sections?level=${level}`).then(a=>a.json());
+            const response = await fetch(`https://localhost:3001/get-sections?level=${level}`).then(a=>a.json());
             setSections(response);
             setCurrentSection(0);
         } catch(err) {

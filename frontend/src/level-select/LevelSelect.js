@@ -7,7 +7,7 @@ export default function LevelSelect({ levels }) {
             <Container className="py-8">
                 <Card className="bg-white rounded-xl shadow-lg p-6">
                     <h1 className="text-3xl font-bold text-center mb-8">Select Level</h1>
-                    <Row className="g-4">
+                    <Row className="g-4 p-5">
                         {levels.map((level) => (
                             <Col key={"level-select-" + level.index} xs={6} sm={3} md={3} lg={2}>
                                 <LevelSelectButton key={"level-select-" + level} index={level.index} name={level.name} />
