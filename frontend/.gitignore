@@ -9,6 +9,10 @@
 # production
 /build
 
+# Certificates
+*.crt
+*.key
+
 # misc
 .DS_Store
 .env.local

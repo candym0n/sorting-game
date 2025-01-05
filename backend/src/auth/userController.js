@@ -89,7 +89,10 @@ class UserController {
              try {
                  const decoded = await jwt.verify(token, process.env.SECRET_KEY);
                  let user = await User.getUserById(decoded.id);
-                 res.status(200).json(user.data);
+                 res.status(200).json({
+                    name: user.name,
+                    data: user.data
+                 });
              } catch (error) {
                  res.status(401).json({ error: 'Unauthorized', more: 'Token: ' + req.session.token + ", full error: " + error});
              }
@@ -143,7 +146,7 @@ class UserController {
             });
             
             req.session.token = token;
-            
+
             res.json({
                 name: user.name,
                 data: user.data

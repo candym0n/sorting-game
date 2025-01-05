@@ -6,22 +6,27 @@ const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const Database = require("./db");
 const userRoutes = require("./auth/userRoutes")
+const https = require("https");
+const fs = require("fs");
 
 // Connect to the database
 Database.Connect();
 
 // Create the react app
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'https://localhost:3000',
+    credentials: true
+}));
+app.use(cookieParser());
 app.use(cookieSession({
     secret: process.env.SECRET_KEY,
     cookie: {
-        secure: true,
         httpOnly: true,
         expires: false
-    }
+    },
+    saveUninitialized: true
 }));
-app.use(cookieParser());
 app.use(express.json());
 
 app.use('/user', userRoutes);
@@ -113,5 +118,17 @@ app.get("/get-sort-data", async (req, res) => {
     res.status(200);
 });
 
-// Listen on port 3000
-app.listen(3001);
+// Listen on port 3001 with a certificate
+https.createServer({
+    key: fs.readFileSync('../frontend/cert.key'),
+    cert: fs.readFileSync('../frontend/cert.crt')
+}, app).listen(3001);
+
+
+/*
+Data in the form
+{
+    lastLevel: INTEGER,     // The last level you completed
+    seen: [INTEGER]         // ID of the sorts you have seen
+}
+*/

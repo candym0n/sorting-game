@@ -29,7 +29,7 @@ export default function LevelSelectScreen() {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch("http://localhost:3001/get-levels");
+            const response = await fetch("https://localhost:3001/get-levels");
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
