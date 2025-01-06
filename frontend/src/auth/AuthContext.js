@@ -17,11 +17,26 @@ const AuthProvider = ({ children }) => {
                 setData({
                     logged_in: true,
                     name: result.name,
-                    data: result.data
+                    data: JSON.parse(result.data),
+                    justSaved: false
                 });
             }
         }).catch();
     }, []);
+
+    // Autosave
+    useEffect(() => {
+        fetch("https://localhost:3001/user/save", {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify(data.data),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).catch();
+    }, [data]);
+
+
 
     return <AuthContext.Provider value={{data, setData}}>
         {children}

@@ -28,6 +28,10 @@ app.use(cookieSession({
     saveUninitialized: true
 }));
 app.use(express.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(express.json());
 
 app.use('/user', userRoutes);
 
@@ -129,6 +133,6 @@ https.createServer({
 Data in the form
 {
     lastLevel: INTEGER,     // The last level you completed
-    seen: [INTEGER]         // ID of the sorts you have seen
+    seen: [INTEGER]         // ID of the explanations you have seen
 }
 */

@@ -1,10 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
+import { ArrowLeft } from "lucide-react";
+import Auth from "./AuthContext";
 
 export default function SignOut() {
     const [signedOut, setSignedOut] = useState(false);
     const navigate = useNavigate();
+    const { data, setData } = useContext(Auth.Context);
+
+    useEffect(() => {
+        setData(prev => ({
+            
+        }));
+    }, [signedOut]);
 
     useEffect(() => {
         fetch("https://localhost:3001/user/get-data", {
@@ -28,6 +37,9 @@ export default function SignOut() {
         <div className="min-h-screen bg-gray-200 p-4">
             <Container className="py-8">
                 <Card className="bg-white rounded-xl shadow-lg p-6">
+                    <Card.Header>
+                        <Button variant="outline-primary" as={Link} to="/level-select"><ArrowLeft /></Button>
+                    </Card.Header>
                     <h1 className="text-3xl font-bold text-center mb-8">{signedOut ? "You are already signed out." : "Are you sure you want to sign out?"} </h1>
                     {
                         signedOut ?

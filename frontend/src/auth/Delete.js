@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
+import { ArrowLeft } from "lucide-react";
 
 export default function SignOut() {
     const [deleted, setDeleted] = useState(false);
@@ -28,6 +29,9 @@ export default function SignOut() {
         <div className="min-h-screen bg-gray-200 p-4">
             <Container className="py-8">
                 <Card className="bg-white rounded-xl shadow-lg p-6">
+                    <Card.Header>
+                        <Button variant="outline-primary" as={Link} to="/level-select"><ArrowLeft /></Button>
+                    </Card.Header>
                     <h1 className="text-3xl font-bold text-center mb-8">{deleted ? "You HAVE no account to delete" : "Are you sure you want to delete your entire account - an irreversible action that will ruin your entire life?????"} </h1>
                     {
                         deleted ?

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
+import { ArrowLeft } from "lucide-react";
 
 export default function SignUp() {
     const [name, setName] = useState('');
@@ -38,6 +39,9 @@ export default function SignUp() {
         <div className="min-h-screen bg-gray-200 p-4">
             <Container className="py-8">
                 <Card className="bg-white rounded-xl shadow-lg p-6">
+                    <Card.Header>
+                        <Button variant="outline-primary" as={Link} to="/level-select"><ArrowLeft /></Button>
+                    </Card.Header>
                     <h1 className="text-3xl font-bold text-center mb-8">Please sign up</h1>
                     <h6 style={{ color: "grey" }}className="text-center mb-8">Already have an account? <Link to="/login">Log in!</Link></h6>
                     <Form onSubmit={handleSubmit} className="p-5">

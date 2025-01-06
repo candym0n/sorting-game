@@ -5,6 +5,34 @@ const User = require('./user');
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
+// For saving
+function concatUnique(arr1, arr2) {
+    // Create a Set to store unique values
+    const uniqueSet = new Set();
+  
+    // Helper function to check if a value is valid
+    const isValid = (value) => {
+      return typeof value !== 'undefined' && value !== null && !isNaN(value);
+    };
+  
+    // Add valid values from arr1 to the set
+    arr1.forEach((value) => {
+      if (isValid(value)) {
+        uniqueSet.add(value);
+      }
+    });
+  
+    // Add valid values from arr2 to the set
+    arr2.forEach((value) => {
+      if (isValid(value)) {
+        uniqueSet.add(value);
+      }
+    });
+  
+    // Convert the set back to an array
+    return Array.from(uniqueSet);
+  }
+
 class UserController {
     static async register(req, res) {
         // Input validation
@@ -64,7 +92,7 @@ class UserController {
         const token = req.session.token;
          if (token) {
              try {
-                 const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+                 const decoded = jwt.verify(token, process.env.SECRET_KEY);
                  await User.changeUserSave(decoded.id, req.body);
                  res.status(200).json({ message: 'Changed!'})
              } catch (error) {
@@ -125,21 +153,35 @@ class UserController {
             return res.status(400).json({ errors: errors.array(), name: req.name, password: req.password });
         }
         
-        const { name, password } = req.body;
+        const { name, password, data } = req.body;
         
         try {
             // Fetch the user from the database
             const user = await User.getUserByName(name);
             if (!user) {
-                return res.status(401).json({ error: 'Invalid credentials' });
+                return res.status(401).json({ error: 'Invalid username' });
             }
             
             // Check if the password matches
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) {
-                return res.status(401).json({ error: 'Invalid credentials' });
+                return res.status(401).json({ error: 'Invalid password' });
             }
             
+            // Save the save if we have a save
+            let brandNew = user.data;
+            if (data) {
+                try {
+                    brandNew = {
+                        lastLevel: Math.max(data.lastLevel || 0, user.data?.lastLevel || 0),
+                        seen: concatUnique(user.data?.seen || [], data.seen || [])
+                    };
+                    await User.changeUserSave(user.id, brandNew);
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+
             // Generate access token
             const token = jwt.sign({ id: user.id }, SECRET_KEY, {
                 expiresIn: '60m'
@@ -149,7 +191,7 @@ class UserController {
 
             res.json({
                 name: user.name,
-                data: user.data
+                data: brandNew
             });
         } catch (err) {
             console.error(err);

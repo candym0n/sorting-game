@@ -1,8 +1,10 @@
 import { Container, Card, Button, Spinner } from "react-bootstrap";
-import { useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import SectionScreen from "./SectionScreen";
+import Auth from "../auth/AuthContext";
+import { ArrowLeft } from "lucide-react";
 
 const LoadingScreen = () => (
     <div className="min-h-screen bg-gray-200 d-flex align-items-center justify-content-center">
@@ -29,6 +31,8 @@ export default function LevelScreen() {
     const [sections, setSections] = useState({});
     const [currentSection, setCurrentSection] = useState(0);
     const [canProceed, setCanProceed] = useState(false);
+    const [cheaterCaught, setCheaterCaught] = useState(false);
+    const { data, setData } = useContext(Auth.Context);
     const navigate = useNavigate();
 
     const fetchData = async () => {
@@ -51,18 +55,39 @@ export default function LevelScreen() {
 
     const nextSection = () => {
         if (currentSection + 1 >= sections.length) {
-            navigate("/level-select")
+            navigate("/level-select");
+            setData(prev=>({
+                logged_in: prev.logged_in,
+                name: prev.name,
+                data: {
+                    lastLevel: Math.max(level, prev.data?.lastLevel || 0),
+                    seen: [...(prev.data?.seen || [])]
+                }
+            }));
         } else {
             setCurrentSection(a=>++a);
         }
     }
 
+    if ((data.data?.lastLevel || 0) + 1 < level) {
+        if (!cheaterCaught) {
+            alert("Stop it, cheater. You are only on level " + (data.data?.lastLevel || 1) + "! Catch up!");
+            setCheaterCaught(true);
+        }
+        navigate("/level-select");    
+        return <></>
+    }
     let mainBody = (
         <div className="bg-gray-200 p-4" style={{height: "100%"}}>
             <Container className="py-8 h-100">
-                <Card className="bg-white rounded-xl shadow-lg p-6 h-100">
-                    <Card.Header>
-                        <h1 className="text-3xl font-bold text-center mb-8">Section {level}.{currentSection + 1}</h1>    
+                <Card>
+                    <Card.Header className="d-flex align-items-center">
+                        <Button variant="outline-primary" as={Link} to="/level-select" className="me-auto">
+                            <ArrowLeft />
+                        </Button>
+                        <h1 className="text-3xl text-center flex-grow font-bold mb-8">
+                            Section {level}.{currentSection + 1}
+                        </h1>
                     </Card.Header>
                     <Card.Body>
                         <SectionScreen setCanProceed={setCanProceed} data={sections[currentSection]}/>
