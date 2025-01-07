@@ -5,9 +5,10 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const Database = require("./db");
-const userRoutes = require("./auth/userRoutes")
+const userRoutes = require("./auth/userRoutes");
 const https = require("https");
 const fs = require("fs");
+const questionRoutes = require("./questions/questionRoutes");
 
 // Connect to the database
 Database.Connect();
@@ -34,6 +35,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.json());
 
 app.use('/user', userRoutes);
+app.use("/question", questionRoutes);
 
 // Get all of the levels (in order)
 app.get("/get-levels", async (req, res) => {
