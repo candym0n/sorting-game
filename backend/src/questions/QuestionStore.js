@@ -12,7 +12,7 @@ function generateRandomString(length) {
     return result;
 }
 
-function selectRandomItems(arr, numItems) {
+function selectRandomItems(arr = [], numItems = arr.length) {
     numItems = Math.min(numItems, arr.length);
   
     const shuffled = [...arr].sort(() => 0.5 - Math.random()); // Create a shuffled copy of the array
@@ -55,9 +55,7 @@ class Question {
         this.correctID = result[this.correct].id;
 
         return {
-            answers: result.map(a=>({
-                name: a.name
-            })),
+            answers: result.map(a=>a.name),
             implementation: result[this.correct].implementation,
             id: this.id
         }
@@ -66,7 +64,7 @@ class Question {
     // `answer` is the index of the answer
     async Answer(answer) {
         // Is it correct?
-        const correct = answer === this.correct;
+        const correct = parseInt(answer) === this.correct;
 
         // Get the explanation
         const result = await Database.Query("SELECT description FROM `explanations` WHERE type=? AND sort_id=?", [this.type, this.correctID]);
@@ -104,7 +102,7 @@ class QuestionStore {
 
     // Delete a question
     static DeleteQuestion(id) {
-        questions = this.questions.filter(a=>a.id != id);
+        this.questions = this.questions.filter(a=>a.id != id);
     }
 
     // Answer a question
