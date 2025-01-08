@@ -11,7 +11,7 @@ export default function Login() {
     const [searchParams, setSearchParams] = useSearchParams();
     const dataParam = searchParams.get('data');
     const navigate = useNavigate();
-    const {data, setData} = useContext(Auth.Context);
+    const {data, setData, concatUnique} = useContext(Auth.Context);
 
     useEffect(() => {
         if (!dataParam) return;
@@ -47,7 +47,10 @@ export default function Login() {
                 setData({
                     logged_in: true,
                     name: result.name,
-                    data: result.data
+                    data: {
+                        lastLevel: Math.max(result.data?.lastLevel, data.lastLevel),
+                        seen: concatUnique(data.data?.seen, result.data?.seen)
+                    }
                 });
                 navigate("/level-select");
             } else {

@@ -31,7 +31,7 @@ function concatUnique(arr1, arr2) {
   
     // Convert the set back to an array
     return Array.from(uniqueSet);
-  }
+}
 
 class UserController {
     static async register(req, res) {
@@ -97,9 +97,7 @@ class UserController {
                  res.status(200).json({ message: 'Changed!'})
              } catch (error) {
                  res.status(500).json({ error: 'Unauthorized: ' + req.session.token + ", error is " + error });
-                 
              }
-             
          } else {
              res.status(401).json({ error: 'Unauthorized' });
          }

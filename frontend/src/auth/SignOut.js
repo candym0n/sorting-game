@@ -2,19 +2,11 @@ import { useState, useEffect, useContext } from "react";
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
 import { ArrowLeft } from "lucide-react";
-import Auth from "./AuthContext";
 
 export default function SignOut() {
     const [signedOut, setSignedOut] = useState(false);
     const navigate = useNavigate();
-    const { data, setData } = useContext(Auth.Context);
-
-    useEffect(() => {
-        setData(prev => ({
-            
-        }));
-    }, [signedOut]);
-
+    
     useEffect(() => {
         fetch("https://localhost:3001/user/get-data", {
             credentials: "include"

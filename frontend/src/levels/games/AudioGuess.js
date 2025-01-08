@@ -1,38 +1,60 @@
 import Sorter from "../Sorter";
 import { Container, Form, Col, Row, Button} from "react-bootstrap";
 
-export default function AudioGuess({ data, algoData, showAnswers, gotCorrect, gotIncorrect }) {
-    const answer = ({ target }) => {
-        if (target.ariaLabel == data[1]) gotCorrect();
-        else gotIncorrect("Incorrect...");
+export default function AudioGuess({ question, showAnswers, setExplanation, gotCorrect, gotIncorrect }) {
+    const answer = async ({ target }) => {
+        const result = await fetch("https://localhost:3001/question/answer", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: question.id,
+                answer: target.ariaLabel
+            })
+        }).then(a=>a.json());
+
+        setExplanation(result.explanation);
+        console.log(result)
+        result.correct ? gotCorrect() : gotIncorrect("Incorrect...");
     };
     
+    console.log(question)
+
     return (
         <Container>
             <Sorter 
-                code={algoData.implementation}
+                code={question.implementation}
                 audio display
             />
             <Form.Group className="mt-5">
                 <Col>
                     <Row>
-                        <Col className="d-flex align-items-end flex-column">
-                            <Button disabled={showAnswers} aria-label={0} onClick={answer} variant={showAnswers ? (data[1] == 0 ? "success" : "danger") : "primary"} className="w-50">{data[0][0].name}</Button>
-                        </Col>
-                        <Col className="d-flex align-items-start flex-column">
-                            <Button disabled={showAnswers} aria-label={1} onClick={answer} variant={showAnswers ? (data[1] == 1 ? "success" : "danger") : "primary"} className="w-50">{data[0][1].name}</Button>
-                        </Col>
+                        {question.answers[0] && (
+                            <Col className="d-flex align-items-end flex-column">
+                                <Button disabled={showAnswers} aria-label={0} onClick={answer} variant="primary" className="w-50">{question.answers[0]}</Button>
+                            </Col>
+                        )}
+                        {question.answers[1] && (
+                            <Col className="d-flex align-items-start flex-column">
+                                <Button disabled={showAnswers} aria-label={1} onClick={answer} variant="primary" className="w-50">{question.answers[1]}</Button>
+                            </Col>
+                        )}
                     </Row>
                     <Row>
                         <br/>
                     </Row>
                     <Row>
-                        <Col className="d-flex align-items-end flex-column">
-                            <Button disabled={showAnswers} aria-label={2} onClick={answer} variant={showAnswers ? (data[1] == 2 ? "success" : "danger") : "primary"} className="w-50">{data[0][2].name}</Button>
-                        </Col>
-                        <Col className="d-flex align-items-start flex-column">
-                            <Button disabled={showAnswers} aria-label={3} onClick={answer} variant={showAnswers ? (data[1] == 3 ? "success" : "danger") : "primary"} className="w-50">{data[0][3].name}</Button>
-                        </Col>
+                        {question.answers[2] && (
+                            <Col className="d-flex align-items-end flex-column">
+                                <Button disabled={showAnswers} aria-label={2} onClick={answer} variant="primary" className="w-50">{question.answers[2]}</Button>
+                            </Col>
+                        )}
+                        {question.answers[3] && (
+                            <Col className="d-flex align-items-start flex-column">
+                                <Button disabled={showAnswers} aria-label={3} onClick={answer} variant="primary" className="w-50">{question.answers[3]}</Button>
+                            </Col>
+                        )}
                     </Row>
                 </Col>
             </Form.Group>
