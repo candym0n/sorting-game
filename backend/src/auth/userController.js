@@ -105,6 +105,7 @@ class UserController {
     
     static async getUserData(req, res) {
         // Input validation
+        console.log(req.session)
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array(), name: req.name, password: req.password });

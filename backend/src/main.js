@@ -20,6 +20,11 @@ app.use(cors({
     credentials: true
 }));
 app.use(cookieParser());
+app.use(cors({
+    origin: 'https://localhost:3000',
+    credentials: true
+}));
+app.use(cookieParser());
 app.use(cookieSession({
     secret: process.env.SECRET_KEY,
     cookie: {
