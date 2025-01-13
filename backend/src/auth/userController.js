@@ -94,7 +94,8 @@ class UserController {
              try {
                  const decoded = jwt.verify(token, process.env.SECRET_KEY);
                  await User.changeUserSave(decoded.id, req.body);
-                 res.status(200).json({ message: 'Changed!'})
+                 const newData = await User.getUserById(decoded.id);
+                 res.status(200).json(newData.data);
              } catch (error) {
                  res.status(500).json({ error: 'Unauthorized: ' + req.session.token + ", error is " + error });
              }

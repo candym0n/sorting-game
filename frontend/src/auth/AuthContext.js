@@ -48,11 +48,12 @@ const AuthProvider = ({ children }) => {
                 const result = await resultAsync.json();
                 let parsedData = JSON.parse(result.data || `{}`);
                 if (resultAsync.ok) {
+                    console.log(parsedData.lastLevel)
                     setData({
                         logged_in: true,
                         name: result.name,
                         data: {
-                            lastLevel: Math.max(data.data?.lastLevel, parsedData?.lastLevel || 0),
+                            lastLevel: Math.max(data.data?.lastLevel || 0, parsedData?.lastLevel || 0),
                             seen: concatUnique(parsedData?.seen, data.data?.seen)
                         },
                         justSaved: false
@@ -64,6 +65,8 @@ const AuthProvider = ({ children }) => {
 
     // Autosave
     useEffect(() => {
+        if (!data.logged_in) return;
+        console.log(data);
         fetch("https://localhost:3001/user/save", {
             method: "POST",
             credentials: "include",
