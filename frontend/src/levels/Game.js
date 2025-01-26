@@ -1,6 +1,7 @@
-import AudioGuess from "./games/AudioGuess";
+/* eslint-disable react-hooks/exhaustive-deps */
+import VisualizerGuess from "./games/VisualizerGuess";
 import { Spinner, Button } from "react-bootstrap";
-import React, { useState, useEffect, forwardRef, useRef } from "react"
+import React, { useState, useEffect } from "react"
 
 const StartingScreen = ({setStarted}) => (
     <div className="min-h-screen bg-gray-200 d-flex align-items-center justify-content-center">
@@ -65,10 +66,10 @@ const Game = React.memo(function Game({ setExplanation, data, showAnswers, gotCo
     let mainGame;
     switch (data.type) {
         case "algo_sound":
-            mainGame = <AudioGuess setExplanation={setExplanation} question={question} showAnswers={showAnswers} gotCorrect={gotCorrect} gotIncorrect={gotIncorrect} />
+            mainGame = <VisualizerGuess setExplanation={setExplanation} question={question} showAnswers={showAnswers} gotCorrect={gotCorrect} gotIncorrect={gotIncorrect} />
             break;
         default:
-            throw "Cannot find game " + data.type;
+            throw new Error("Cannot find game " + data.type);
     }
 
     return (

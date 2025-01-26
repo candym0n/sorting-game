@@ -102,6 +102,8 @@ export default function Sorter({ display, audio, code }) {
                     await new Promise(res=>setTimeout(res, delay));
                     goOn = true;
                     break;
+                default:
+                    break;
             }
             if (goOn) continue;
         }

@@ -12,7 +12,7 @@ function parseTime(seconds) {
     return `${minutesStr}:${secondsStr}`;
 }
 
-export default function SectionScreen({ data, setCanProceed }) {
+export default function SectionScreen({ data, canProceed, setCanProceed }) {
     const [answered, setAnswered] = useState(false);
     const [correct, setCorrect] = useState(false);
     const [message, setMessage] = useState("");
@@ -33,7 +33,14 @@ export default function SectionScreen({ data, setCanProceed }) {
         }, 1000);
 
         return () => clearInterval(id);
-    }, [answered, started]);
+    }, [answered, data.limit, started]);
+
+    useEffect(() => {
+        setStreak(0);
+        setStarted(false);
+        setAnswered(false);
+        gameRef.newGame();
+    }, [data]);
 
     useEffect(() => {
         if (timer <= 0) {
@@ -42,8 +49,12 @@ export default function SectionScreen({ data, setCanProceed }) {
     }, [timer]);
 
     useEffect(() => {
-        if (streak >= data.required) setCanProceed(true);
-    }, [streak])
+        if (streak >= data.required) {
+            setCanProceed(true);
+        } else {
+            setCanProceed(false);
+        }
+    }, [data.required, setCanProceed, streak])
 
     const onCorrect = () => {
         setAnswered(true);
@@ -90,7 +101,8 @@ export default function SectionScreen({ data, setCanProceed }) {
                         tryAgain={tryAgain} 
                         correct={correct} 
                         reason={correct ? "Correct!" : message} 
-                        explanation={explanation} 
+                        explanation={explanation}
+                        canProceed={canProceed}
                     />
                 </div>
             </>

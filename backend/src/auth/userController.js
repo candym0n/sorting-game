@@ -106,7 +106,6 @@ class UserController {
     
     static async getUserData(req, res) {
         // Input validation
-        console.log(req.session)
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array(), name: req.name, password: req.password });
@@ -172,8 +171,9 @@ class UserController {
             let brandNew = user.data;
             if (data) {
                 try {
+                    console.log(Math.max(data.data?.lastLevel || 0, user.data?.lastLevel || 0))
                     brandNew = {
-                        lastLevel: Math.max(data.lastLevel || 0, user.data?.lastLevel || 0),
+                        lastLevel: Math.max(data.data?.lastLevel || 0, user.data?.lastLevel || 0),
                         seen: concatUnique(user.data?.seen || [], data.seen || [])
                     };
                     await User.changeUserSave(user.id, brandNew);

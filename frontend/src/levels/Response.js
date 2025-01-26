@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ProgressBar, Button, Container, Form, Row, Col} from 'react-bootstrap';
 
-export default function Response({ completed, reason, correct, explanation, tryAgain }) {
+export default function Response({ completed, canProceed, reason, correct, explanation, tryAgain }) {
     let [now, setNow] = useState(100);
 
     const continueSection = () => {
@@ -28,7 +28,7 @@ export default function Response({ completed, reason, correct, explanation, tryA
                         <div>
                             {explanation}
                         </div>
-                        <Button disabled={now > 0} onClick={continueSection} variant={correct ? "success" : "danger"} style={{display: completed ? "none" : ""}}>
+                        <Button disabled={now > 0 || canProceed} onClick={continueSection} variant={correct ? "success" : "danger"} style={{display: completed ? "none" : ""}}>
                             Continue
                             <ProgressBar style={{display: now > 0 ? "flex" : "none"}} now={now} />
                         </Button>
