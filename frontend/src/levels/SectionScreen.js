@@ -12,19 +12,19 @@ function parseTime(seconds) {
     return `${minutesStr}:${secondsStr}`;
 }
 
-export default function SectionScreen({ data, canProceed, setCanProceed }) {
+export default function SectionScreen({ sectionData, canProceed, setCanProceed }) {
     const [answered, setAnswered] = useState(false);
     const [correct, setCorrect] = useState(false);
     const [message, setMessage] = useState("");
     const [streak, setStreak] = useState(0);
-    const [timer, setTimer] = useState(data.limit);
+    const [timer, setTimer] = useState(sectionData.limit);
     const [explanation, setExplanation] = useState("");
     const [started, setStarted] = useState(false);
     let gameRef = useRef({});
 
     useEffect(() => {
         if (answered || !started) {
-            setTimer(data.limit);
+            setTimer(sectionData.limit);
             return;
         }
 
@@ -33,14 +33,14 @@ export default function SectionScreen({ data, canProceed, setCanProceed }) {
         }, 1000);
 
         return () => clearInterval(id);
-    }, [answered, data.limit, started]);
+    }, [answered, sectionData.limit, started]);
 
     useEffect(() => {
         setStreak(0);
         setStarted(false);
         setAnswered(false);
         gameRef.newGame();
-    }, [data]);
+    }, [sectionData]);
 
     useEffect(() => {
         if (timer <= 0) {
@@ -49,12 +49,12 @@ export default function SectionScreen({ data, canProceed, setCanProceed }) {
     }, [timer]);
 
     useEffect(() => {
-        if (streak >= data.required) {
+        if (streak >= sectionData.required) {
             setCanProceed(true);
         } else {
             setCanProceed(false);
         }
-    }, [data.required, setCanProceed, streak])
+    }, [sectionData.required, setCanProceed, streak])
 
     const onCorrect = () => {
         setAnswered(true);
@@ -71,7 +71,7 @@ export default function SectionScreen({ data, canProceed, setCanProceed }) {
 
     const tryAgain = () => {
         setAnswered(false);
-        setTimer(data.limit);
+        setTimer(sectionData.limit);
         if (gameRef) gameRef.newGame();
     }
 
@@ -79,14 +79,14 @@ export default function SectionScreen({ data, canProceed, setCanProceed }) {
         <>
             <div className="mb-4 text-center">
                 <h1>{parseTime(timer)}</h1>
-                <h3>{streak}/{data.required}</h3>
+                <h3>{streak}/{sectionData.required}</h3>
             </div>
             <div className="mb-4">
                 <Game 
                     ref={gameRef} 
                     setStarted={setStarted} 
                     setExplanation={setExplanation} 
-                    data={data} showAnswers={answered} 
+                    sectionData={sectionData} showAnswers={answered} 
                     gotCorrect={onCorrect} 
                     gotIncorrect={onIncorrect} 
                     started={started}
@@ -97,7 +97,7 @@ export default function SectionScreen({ data, canProceed, setCanProceed }) {
                 <hr className="my-4"></hr>
                 <div className="mb-4">
                     <Response 
-                        completed={streak >= data.required} 
+                        completed={streak >= sectionData.required} 
                         tryAgain={tryAgain} 
                         correct={correct} 
                         reason={correct ? "Correct!" : message} 

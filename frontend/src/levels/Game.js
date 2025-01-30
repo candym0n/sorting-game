@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import VisualizerGuess from "./games/VisualizerGuess";
 import { Spinner, Button } from "react-bootstrap";
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
+import AuthContext from "../auth/AuthContext";
+import Introduction from "./Introduction";
 
 const StartingScreen = ({setStarted}) => (
     <div className="min-h-screen bg-gray-200 d-flex align-items-center justify-content-center">
@@ -28,16 +30,20 @@ const ErrorScreen = ({ error, onRetry }) => (
     </div>
 );
 
-const Game = React.memo(function Game({ setExplanation, data, showAnswers, gotCorrect, gotIncorrect, ref, setStarted, started }) {
+const Game = React.memo(function Game({ setExplanation, sectionData, showAnswers, gotCorrect, gotIncorrect, ref, setStarted, started }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [question, setQuestion] = useState(null);
+    const { data, setData } = useContext(AuthContext.Context);
+    const [readIntro, setReadIntro] = useState(false);
+    const [texts, setTexts] = useState([]);
 
     const fetchData = async () => {
         try {
             setStarted(false);
             setLoading(true);
             setError(null);
+            setReadIntro(false);
             const response = await fetch(`https://localhost:3001/question/register`, {
                 method: "POST",
                 credentials: "include",
@@ -45,11 +51,21 @@ const Game = React.memo(function Game({ setExplanation, data, showAnswers, gotCo
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    sorts: data.ids.split(","),
-                    type: data.type
+                    sorts: sectionData.ids.split(","),
+                    type: sectionData.type,
+                    seen: data?.data?.seen || []
                 })
             }).then(a=>a.json());
-            setQuestion(response);
+            setQuestion(response[0]);
+            setTexts(response[1][0]);
+            setData(prev => ({
+                logged_in: prev.logged_in,
+                name: prev.name,
+                data: {
+                    lastLevel: prev?.data?.lastLevel,
+                    seen: [...(prev?.data?.seen || []), ...response[1][1]]
+                }
+            }))
         } catch(err) {
             setError(err.message);
         } finally {
@@ -63,18 +79,25 @@ const Game = React.memo(function Game({ setExplanation, data, showAnswers, gotCo
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (texts.length === 0) {
+            setReadIntro(true);
+        }
+    }, [texts]);
+
     let mainGame;
-    switch (data.type) {
+    switch (sectionData.type) {
         case "algo_sound":
             mainGame = <VisualizerGuess setExplanation={setExplanation} question={question} showAnswers={showAnswers} gotCorrect={gotCorrect} gotIncorrect={gotIncorrect} />
             break;
         default:
-            throw new Error("Cannot find game " + data.type);
+            throw new Error("Cannot find game " + sectionData.type);
     }
 
     return (
         error ? <ErrorScreen error={error} onRetry={fetchData} /> :
         loading ? <LoadingScreen /> :
+        !readIntro ? <Introduction next={()=>setReadIntro(true)} texts={texts} /> :
         !started ? <StartingScreen setStarted={setStarted} /> :
         mainGame
     )
