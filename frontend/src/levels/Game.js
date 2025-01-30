@@ -76,10 +76,6 @@ const Game = React.memo(function Game({ setExplanation, sectionData, showAnswers
     ref.newGame = fetchData;
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    useEffect(() => {
         if (texts.length === 0) {
             setReadIntro(true);
         }
