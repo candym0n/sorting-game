@@ -37,6 +37,7 @@ const Game = React.memo(function Game({ setExplanation, sectionData, showAnswers
     const { data, setData } = useContext(AuthContext.Context);
     const [readIntro, setReadIntro] = useState(false);
     const [texts, setTexts] = useState([]);
+    const [correctList, setCorrectList] = useState([]);
 
     const fetchData = async () => {
         try {
@@ -81,10 +82,33 @@ const Game = React.memo(function Game({ setExplanation, sectionData, showAnswers
         }
     }, [texts]);
 
+    const answer = async (guess) => {
+        const result = await fetch("https://localhost:3001/question/answer", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: question.id,
+                answer: guess
+            })
+        }).then(a=>a.json());
+
+        setExplanation(result.explanation);
+        setCorrectList(result.result);
+        result.correct ? gotCorrect() : gotIncorrect("Incorrect...");
+    };
+
     let mainGame;
     switch (sectionData.type) {
         case "algo_sound":
-            mainGame = <VisualizerGuess setExplanation={setExplanation} question={question} showAnswers={showAnswers} gotCorrect={gotCorrect} gotIncorrect={gotIncorrect} />
+            mainGame = 
+            <VisualizerGuess 
+                question={question}
+                showAnswers={showAnswers}
+                answer={answer}
+                correctList={correctList}
+            />
             break;
         default:
             throw new Error("Cannot find game " + sectionData.type);
