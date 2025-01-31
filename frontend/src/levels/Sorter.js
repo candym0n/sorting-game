@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { MAX_VALUE } from "./games/constants";
+import { ARRAY_LENGTH, MAX_VALUE } from "./games/constants";
 import Interpreter from "js-interpreter";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { PauseCircle, PlayCircle } from "lucide-react";
@@ -11,7 +11,7 @@ export default function Sorter({ display, audio, code }) {
     const [interpreter, setInterpreter] = useState(null);
     const [selected, setSelected] = useState([]);
     const [volume, setVolume] = useState(0.5);
-    const [delay, setDelay] = useState(1);
+    const [delay, setDelay] = useState(20);
     const [play, setPlay] = useState(false);
     const [list, setList] = useState([]);
     const listRef = useRef(list);
@@ -27,7 +27,15 @@ export default function Sorter({ display, audio, code }) {
 
     useEffect(() => {
         setList([]);
-        for (let i = 0; i < 100; ++i) setList(a=>[...a, Math.random() * MAX_VALUE]);
+        for (let i = 0; i < ARRAY_LENGTH; ++i) setList(a=>[...a, (1 - i / ARRAY_LENGTH) * MAX_VALUE]);
+
+        for (let i = 0; i < ARRAY_LENGTH; ++i) {
+            setList(prev => {
+                let randomIndex = Math.floor(Math.random() * ARRAY_LENGTH);
+                [prev[randomIndex], prev[i]] = [prev[i], prev[randomIndex]];
+                return prev;
+            });
+        }
     }, []);
 
 
@@ -50,8 +58,7 @@ export default function Sorter({ display, audio, code }) {
             return copy;
         });
         setSelected([a, b]);
-        playSound(list[a]);
-        playSound(list[b]);
+        playSound((a+b)/2)
         setTimeout(callback, 1);
     };
 
@@ -102,6 +109,8 @@ export default function Sorter({ display, audio, code }) {
                     await new Promise(res=>setTimeout(res, delay));
                     goOn = true;
                     break;
+                default:
+                    break;
             }
             if (goOn) continue;
         }
@@ -120,7 +129,8 @@ export default function Sorter({ display, audio, code }) {
     const playSound = (height) => {
         if (!audioContext) return;
         if (!height) return;
-        if (volumeRef.current < 0.05) return;
+        if (volumeRef.current < 0.02) return;
+        
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 
@@ -129,8 +139,8 @@ export default function Sorter({ display, audio, code }) {
         
         const frequency = 200 + (height / MAX_VALUE) * 800;
         oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-        oscillator.type = 'square';
-        
+        oscillator.type = "triangle";
+
         gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
         gainNode.gain.linearRampToValueAtTime(volumeRef.current, audioContext.currentTime + 0.01);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
@@ -150,7 +160,7 @@ export default function Sorter({ display, audio, code }) {
                     </Col>
                     <Col>
                         <Form.Label style={{ fontSize: "1.5rem" }}>Delay: {Math.floor(delay) / 1000}s</Form.Label>
-                        <Form.Range defaultValue={1} min={1} max={1000} step={10} onChange={(e)=>setDelay(e.target.value)}/>
+                        <Form.Range defaultValue={20} min={1} max={1000} step={10} onChange={(e)=>setDelay(e.target.value)}/>
                     </Col>
                     <Col>
                         <Row xs={3}>

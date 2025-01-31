@@ -90,10 +90,10 @@ export default function LevelScreen() {
                         </h1>
                     </Card.Header>
                     <Card.Body>
-                        <SectionScreen setCanProceed={setCanProceed} data={sections[currentSection]}/>
+                        <SectionScreen canProceed={canProceed} setCanProceed={setCanProceed} sectionData={sections[currentSection]}/>
                     </Card.Body>
                     <Card.Footer>
-                        <Button onClick={nextSection} disabled={!canProceed} style={{width:"100%"}}>Next</Button>
+                        <Button onClick={nextSection} disabled={!canProceed} style={{width:"100%"}}>Next Section</Button>
                     </Card.Footer>
                 </Card>
             </Container>

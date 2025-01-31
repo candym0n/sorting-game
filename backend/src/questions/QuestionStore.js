@@ -75,6 +75,26 @@ class Question {
             result: this.answers.map((_, i)=>i==this.correct)
         }
     }
+
+    // Get the introduction texts (if any)
+    async Introductions(seen) {
+        const seenPlaceholders = seen.map(() => '?').join(',');
+        const sortPlaceholders = this.answers.map(() => '?').join(',');
+
+        const query = `
+            SELECT id, description, title
+            FROM explanations
+            WHERE ${seenPlaceholders.length ? `id NOT IN (${seenPlaceholders})` : "1"}
+            AND type=?
+            AND sort_id IN (${sortPlaceholders})
+        `;
+
+        const result = await Database.Query(query, [...seen, this.type, ...this.answers]);
+        return [
+            result.map(({ id, description, title }) => ({ description, title })),
+            result.map(({ id, description, title }) => (id))
+        ];
+    }
 }
 
 class QuestionStore {
@@ -89,15 +109,18 @@ class QuestionStore {
         } while (this.questions.reduce((a, b)=>a || (b.id == id), false));
 
         // Get the question
-        const { sorts, type } = req.body;
+        const { sorts, type, seen } = req.body;
         const question = new Question(id, sorts, type);
         
         // Add it to the list
         this.questions.push(question);
 
-        // Return the question data
+        // Get the question data and introductions (if applicable)
         const data = await question.Names();
-        res.json(data);
+        
+        const introductions = await question.Introductions(seen);
+
+        res.json([data, introductions]);
     }
 
     // Delete a question
