@@ -28,7 +28,7 @@ export default function LevelSelectButton({ index, name }) {
                 style={buttonStyle}
                 variant={locked ? "secondary" : "primary"}
                 disabled={locked}
-                className="position-relative shine"
+                className="position-relative shine "
                 as={Link}
                 to={`/level/${index}`}
             >

@@ -23,7 +23,7 @@ export default function Response({ completed, canProceed, reason, correct, expla
         <Container>
             <Form.Group className="text-center">
                 <Form.Label style={{ fontSize: "2.5rem", color: correct ? "green" : "red" }}>{reason}</Form.Label>
-                <Row className="justify-content-center" style={{ fontSize: "1.2rem" }}>
+                <Row className="introduction justify-content-center" style={{ fontSize: "1.2rem" }}>
                     <Col xs={10} md={8} lg={6}>
                         <div>
                             {explanation}

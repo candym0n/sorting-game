@@ -38,14 +38,14 @@ export default function SignUp() {
     return (
         <div className="min-h-screen bg-gray-200 p-4">
             <Container className="py-8">
-                <Card className="bg-white rounded-xl shadow-lg p-6">
+                <Card className=" rounded-xl shadow-lg p-6">
                     <Card.Header>
                         <Button variant="outline-primary" as={Link} to="/level-select"><ArrowLeft /></Button>
                     </Card.Header>
-                    <h1 className="text-3xl font-bold text-center mb-8">Please sign up</h1>
-                    <h6 style={{ color: "grey" }}className="text-center mb-8">Already have an account? <Link to="/login">Log in!</Link></h6>
+                    <h1 className="introduction text-3xl font-bold text-center mb-8">Please sign up</h1>
+                    <h6 style={{ color: "grey" }}className="introduction text-center mb-8">Already have an account? <Link className="introduction-link" to="/login">Log in!</Link></h6>
                     <Form onSubmit={handleSubmit} className="p-5">
-                        <Form.Group className="p-3" controlId="formBasicEmail">
+                        <Form.Group className="p-3 introduction" controlId="formBasicEmail">
                             <Form.Label>Username</Form.Label>
                             <Form.Control 
                                 type="username" 
@@ -54,7 +54,7 @@ export default function SignUp() {
                                 onChange={(e) => setName(e.target.value)} 
                             />
                         </Form.Group>
-                            <Form.Group className="p-3" controlId="formBasicPassword">
+                            <Form.Group className="introduction p-3" controlId="formBasicPassword">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control 
                                     type="password" 

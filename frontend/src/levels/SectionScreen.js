@@ -77,7 +77,7 @@ export default function SectionScreen({ sectionData, canProceed, setCanProceed }
 
     return (
         <>
-            <div className="mb-4 text-center">
+            <div className="introduction mb-4 text-center">
                 <h1>{parseTime(timer)}</h1>
                 <h3>{streak}/{sectionData.required}</h3>
             </div>

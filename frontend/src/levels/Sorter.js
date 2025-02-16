@@ -152,7 +152,7 @@ export default function Sorter({ display, audio, code }) {
     return (
         <>
             {display && <SortingVisualizer height={200} list={list} selected={selected}/>}
-            <Form.Group>
+            <Form.Group className="introduction">
                 <Row>
                     <Col>
                         <Form.Label style={{ fontSize: "1.5rem" }}>Volume: {Math.floor(100 * volume)}%</Form.Label>

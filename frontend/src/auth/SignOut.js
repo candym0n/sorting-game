@@ -28,7 +28,7 @@ export default function SignOut() {
     return (
         <div className="min-h-screen bg-gray-200 p-4">
             <Container className="py-8">
-                <Card className="bg-white rounded-xl shadow-lg p-6">
+                <Card className=" rounded-xl shadow-lg p-6">
                     <Card.Header>
                         <Button variant="outline-primary" as={Link} to="/level-select"><ArrowLeft /></Button>
                     </Card.Header>

@@ -13,7 +13,7 @@ export default function SortingVisualizer({ list = [], height, selected = [] }) 
                         <div
                             style={{
                                 height: `${(value / MAX_VALUE) * height}px`,
-                                backgroundColor: selected.includes(index) ? '#dc3545' : '#0d6efd',
+                                backgroundColor: selected.includes(index) ? '#00AA00' : '#00EE00',
                                 width: '100%'
                             }}
                         />
