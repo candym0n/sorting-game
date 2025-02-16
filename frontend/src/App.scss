@@ -24,7 +24,7 @@ a[aria-disabled="true"] {
 }
 
 body {
-    background: black;
+    background: #000825;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -62,4 +62,3 @@ body {
 }
 
 @import 'bootstrap/dist/css/bootstrap.min.css';
-@import "styles/glitch.scss"
