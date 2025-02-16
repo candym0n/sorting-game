@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import Login from './auth/Login';
+import SignUp from "./auth/SignUp";
+import SignOut from "./auth/SignOut";
+import Delete from "./auth/Delete";
+import './App.scss';
+import LevelSelectScreen from './level-select/LevelSelectScreen';
+import LevelScreen from './levels/LevelScreen';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
+import Auth from './auth/AuthContext';
+import Rainfall from './Rainfall';
+import React from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <React.Fragment>
+            <Rainfall />
+            <Auth.Provider>
+                <Router>
+                    <Routes>
+                        <Route path="/level-select" element={<LevelSelectScreen />} />
+                        <Route path="/level/:level" element={<LevelScreen />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<SignUp />} />
+                        <Route path="/signout" element={<SignOut />} />
+                        <Route path="/delete-account" element={<Delete />} />
+                        <Route path="*" element={<Navigate to="/level-select" />} />
+                    </Routes>
+                </Router>
+            </Auth.Provider>
+        </React.Fragment>
+    );
 }
 
 export default App;

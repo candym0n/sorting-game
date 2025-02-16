@@ -1,0 +1,4 @@
+const MAX_VALUE = 400;
+const ARRAY_LENGTH = 100;
+
+export { MAX_VALUE, ARRAY_LENGTH };

@@ -1,0 +1,65 @@
+// Ensure that "disabled" links are not interactive in ANY way
+a[aria-disabled="true"] {
+    pointer-events: none;
+}
+
+.shine {
+    mask-image: linear-gradient(
+        -75deg,
+        rgba(0, 0, 0, 1) 30%,
+        rgba(0, 0, 0, 0.9) 50%,
+        rgba(0, 0, 0, 1) 70%
+    );
+    mask-size: 200%;
+    animation: shine 2s linear infinite;
+  }
+    
+  @keyframes shine {
+    from {
+        -webkit-mask-position: 150%;
+    }
+    to {
+        -webkit-mask-position: -50%;
+    }
+}
+
+body {
+    background: black;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.card-header {
+    color: #90ee90;
+    background-color: rgba(20, 20, 20, 0.9);
+}
+
+.card {
+    background-color: rgba(51, 51, 51, 0.9);
+    border: 2px solid #004000;
+}
+
+.btn-primary {
+    background-color: #005500 !important;
+}
+
+.btn {
+    border-radius: 20%;
+}
+
+.btn-primary:hover {
+    background-color: #004000 !important;
+}
+
+.btn-primary:active {
+    background-color: #003000 !important;
+}
+
+.introduction {
+    color: #90EE90 !important;
+    font-family: monospace;
+    font-weight: 1500;
+}
+
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "styles/glitch.scss"
