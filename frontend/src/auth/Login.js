@@ -67,8 +67,8 @@ export default function Login() {
             <Card.Header>
                 <Button variant="outline-primary" as={Link} to="/level-select"><ArrowLeft /></Button>
             </Card.Header>
-            <h1 className="introduction text-3xl font-bold text-center mb-8">Please log in</h1>
-            <h6 style={{ color: "grey" }}className="introduction text-center mb-8">Don't have an account? <Link className="introduction-link" to="/signup">Sign up now!</Link></h6>
+            <h1 className="text-3xl font-bold text-center mb-8">Please log in</h1>
+            <h6 style={{ color: "grey" }}className="text-center mb-8">Don't have an account? <Link to="/signup">Sign up now!</Link></h6>
             <Form onSubmit={handleSubmit} className="p-5 introduction">
                 <Form.Group className="p-3" controlId="formBasicEmail">
                     <Form.Label>Username</Form.Label>
