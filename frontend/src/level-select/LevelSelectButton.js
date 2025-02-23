@@ -1,45 +1,64 @@
-import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { Lock } from "lucide-react";
+import { Lock, Star } from "lucide-react";
 import Auth from "../auth/AuthContext";
 import { useContext } from "react";
 
-const buttonStyle = {
-    aspectRatio: "1/1",
-    width: "100%",
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 0,
-    fontSize: "max(4vw, 2.5rem)",
-    fontWeight: "bold",
-    lineHeight: 1,
-};
+export default function LevelSelectButton({ index, name, score = 1 }) {
+    const { data } = useContext(Auth.Context);
 
-export default function LevelSelectButton({ index, name }) {
-    const { data, setData } = useContext(Auth.Context);
-    
     const locked = ((data.data?.lastLevel || 0) + 1) < index;
+
+    const renderStars = (count) => {
+        const stars = [];
+        for (let i = 0; i < 3; i++) {
+            if (i < count) {
+                stars.push(
+                    <Col>
+                        <Star
+                            key={i}
+                            className="w-100 h-100"
+                            fill="yellow"
+                            strokeWidth={1}
+                        />
+                    </Col>
+                );
+            } else {
+                stars.push(
+                    <Col>
+                        <Star
+                            key={i}
+                            className="w-100 h-100"
+                        />
+                    </Col>
+                );
+            }
+        }
+        return stars;
+    };
 
     return (
         <OverlayTrigger placement="top" overlay={<Tooltip>{name}</Tooltip>}>
-            <Button 
-                style={buttonStyle}
-                variant={locked ? "secondary" : "primary"}
-                disabled={locked}
-                className="position-relative shine "
-                as={Link}
-                to={`/level/${index}`}
-            >
-                    {index}
-                    {locked && <Lock className="position-absolute" style={{
-                        bottom: "10%",
-                        right: "10%",
-                        width: "20%",
-                        height: "20%"
-                    }} />}
-            </Button>
+            <Col className="justify-content-md-center">
+                <Row className="justify-content-md-center">
+                    <Button
+                        disabled={locked}
+                        className="position-relative level-select-button"
+                        as={Link}
+                        to={`/level/${index}`}
+                    >
+                        {
+                            locked ? <Lock style={{ width: "50%", height: "50%" }} /> :
+                                <span>{index}</span>
+                        }
+                    </Button>
+                </Row>
+                <Row className="justify-content-md-center">
+                    <Col />
+                    {renderStars(score)}
+                    <Col />
+                </Row>
+            </Col>
         </OverlayTrigger>
     )
 }

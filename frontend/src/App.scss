@@ -4,23 +4,72 @@ a[aria-disabled="true"] {
 }
 
 .shine {
-    mask-image: linear-gradient(
-        -75deg,
-        rgba(0, 0, 0, 1) 30%,
-        rgba(0, 0, 0, 0.9) 50%,
-        rgba(0, 0, 0, 1) 70%
-    );
+    mask-image: linear-gradient(-75deg,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0.9) 50%,
+            rgba(0, 0, 0, 1) 70%);
     mask-size: 200%;
     animation: shine 2s linear infinite;
-  }
-    
-  @keyframes shine {
+}
+
+@keyframes shine {
     from {
         -webkit-mask-position: 150%;
     }
+
     to {
         -webkit-mask-position: -50%;
     }
+}
+
+body {
+    background-color: darken(navy, 20);
+}
+
+.level-select-button[aria-disabled="true"] {
+    filter: grayscale(90%);
+}
+
+.level-select-button {
+    border-radius: 100%;
+    aspect-ratio: 1/1;
+    width: 80%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: max(4vw, 2.5rem);
+    font-weight: bold;
+    line-height: 1;
+    border: 7px solid white;
+    background-image: url("../public/images/sort.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    animation: shine 5s linear 2s infinite;
+}
+
+.level-select-button::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    border: 10px solid orange;
+    border-radius: 100%;
+}
+
+.level-select-button>span {
+    width: 50%;
+    height: 50%;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: darken(darkorange, 10);
+    border: 2px solid white;
 }
 
 @import 'bootstrap/dist/css/bootstrap.min.css';
