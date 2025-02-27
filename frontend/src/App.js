@@ -7,13 +7,11 @@ import LevelSelectScreen from './level-select/LevelSelectScreen';
 import LevelScreen from './levels/LevelScreen';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import Auth from './auth/AuthContext';
-import Rainfall from './Rainfall';
 import React from 'react';
 
 function App() {
     return (
         <React.Fragment>
-            {/*<Rainfall />*/}
             <Auth.Provider>
                 <Router>
                     <Routes>
