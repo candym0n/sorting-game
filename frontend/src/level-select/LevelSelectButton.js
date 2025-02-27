@@ -53,11 +53,11 @@ export default function LevelSelectButton({ index, name, score = 1 }) {
                         }
                     </Button>
                 </Row>
-                <Row className="justify-content-md-center">
+                {!locked && <Row className="justify-content-md-center">
                     <Col />
                     {renderStars(score)}
                     <Col />
-                </Row>
+                </Row>}
             </Col>
         </OverlayTrigger>
     )
