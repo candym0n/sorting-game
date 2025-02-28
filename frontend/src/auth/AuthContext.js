@@ -5,7 +5,8 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
     const [data, setData] = useState({
        logged_in: false,
-       name: ""
+       name: "",
+       levelData: []
     });
 
     useEffect(() => {
@@ -18,7 +19,8 @@ const AuthProvider = ({ children }) => {
                 if (resultAsync.ok) {
                     setData({
                         logged_in: true,
-                        name: result.name
+                        name: result.name,
+                        levelData: result.data
                     });
                 }
             }, 100)

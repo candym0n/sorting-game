@@ -5,7 +5,12 @@ class User {
         const result = await Database.Query("SELECT * FROM `users` WHERE `name` = ?", [name]);
         return result[0];
     }
-    
+
+    static async getUserDataById(id) {
+        const result = await Database.Query("SELECT id, level_id, score FROM `progress` WHERE user_id = ?", [id]);
+        return result;
+    }
+
     static async deleteUser(id) {
         await Database.Query("DELETE FROM `users` WHERE `id` = ?", [id]);
         return id;

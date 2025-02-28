@@ -4,11 +4,11 @@ import { Lock, Star } from "lucide-react";
 import Auth from "../auth/AuthContext";
 import { useContext } from "react";
 
-export default function LevelSelectButton({ index, name, score = 1 }) {
+export default function LevelSelectButton({ index }) {
     const { data } = useContext(Auth.Context);
 
-    /* TODO: Fix this */
-    const locked = false;
+    const levelData = data.levelData.find(a => a.id == index);
+    const locked = index != 1 && !levelData;
 
     const renderStars = (count) => {
         const stars = [];
@@ -39,7 +39,7 @@ export default function LevelSelectButton({ index, name, score = 1 }) {
     };
 
     return (
-        <OverlayTrigger placement="top" overlay={<Tooltip>{name}</Tooltip>}>
+        <OverlayTrigger placement="top" overlay={<Tooltip>{levelData?.name}</Tooltip>}>
             <Col className="justify-content-md-center">
                 <Row className="justify-content-md-center">
                     <Button
@@ -56,7 +56,7 @@ export default function LevelSelectButton({ index, name, score = 1 }) {
                 </Row>
                 {!locked && <Row className="justify-content-md-center">
                     <Col />
-                    {renderStars(score)}
+                    {renderStars(levelData?.score)}
                     <Col />
                 </Row>}
             </Col>
