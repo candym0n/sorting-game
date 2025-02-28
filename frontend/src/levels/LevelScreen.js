@@ -66,8 +66,8 @@ export default function LevelScreen() {
             alert("Stop it, cheater. You are only on level " + (data.data?.lastLevel || 1) + "! Catch up!");
             setCheaterCaught(true);
         }
-        navigate("/level-select");    
-        return <></>
+        navigate("/level-select");
+        return <></>;
     }
     let mainBody = (
         <div className="bg-gray-200 p-4" style={{height: "100%"}}>

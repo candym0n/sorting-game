@@ -30,13 +30,13 @@ const ErrorScreen = ({ error, onRetry }) => (
     </div>
 );
 
-const Game = React.memo(function Game({ setExplanation, sectionData, showAnswers, gotCorrect, gotIncorrect, ref, setStarted, started }) {
+const Game = React.memo(function Game({ sectionId, setExplanation, showAnswers, gotCorrect, gotIncorrect, ref, setStarted, started }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [question, setQuestion] = useState(null);
-    const { data, setData } = useContext(AuthContext.Context);
     const [readIntro, setReadIntro] = useState(false);
     const [texts, setTexts] = useState([]);
+    const [type, setType] = useState("");
     const [correctList, setCorrectList] = useState([]);
 
     const fetchData = async () => {
@@ -52,12 +52,12 @@ const Game = React.memo(function Game({ setExplanation, sectionData, showAnswers
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    sorts: sectionData.ids.split(","),
-                    type: sectionData.type
+                    id: sectionId
                 })
             }).then(a=>a.json());
             setQuestion(response[0]);
             setTexts(response[1][0]);
+            setType(response[2]);
         } catch(err) {
             setError(err.message);
         } finally {
@@ -91,7 +91,7 @@ const Game = React.memo(function Game({ setExplanation, sectionData, showAnswers
     };
 
     let mainGame;
-    switch (sectionData.type) {
+    switch (type) {
         case "algo_sound":
             mainGame = 
             <VisualizerGuess 
@@ -102,7 +102,8 @@ const Game = React.memo(function Game({ setExplanation, sectionData, showAnswers
             />
             break;
         default:
-            throw new Error("Cannot find game " + sectionData.type);
+            mainGame = "Game not found!";
+            break;
     }
 
     return (

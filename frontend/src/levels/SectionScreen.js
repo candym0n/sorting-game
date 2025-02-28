@@ -82,11 +82,11 @@ export default function SectionScreen({ sectionData, canProceed, setCanProceed }
                 <h3>{streak}/{sectionData.required}</h3>
             </div>
             <div className="mb-4">
-                <Game 
+                <Game
+                    sectionId={sectionData.id}
                     ref={gameRef} 
                     setStarted={setStarted} 
-                    setExplanation={setExplanation} 
-                    sectionData={sectionData} showAnswers={answered} 
+                    setExplanation={setExplanation}
                     gotCorrect={onCorrect} 
                     gotIncorrect={onIncorrect} 
                     started={started}

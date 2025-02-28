@@ -52,14 +52,14 @@ app.get("/get-levels", async (req, res) => {
 // Get all of the sections in a level
 app.get("/get-sections", async (req, res) => {
     const level = req.query.level;
-    const sectionData = await Database.Query("SELECT type, time_limit, required, section_index, sort_ids FROM `sections` WHERE level_id=? ORDER BY section_index ASC", [level]);
+    const sectionData = await Database.Query("SELECT id, type, time_limit, required, section_index FROM `sections` WHERE level_id=? ORDER BY section_index ASC", [level]);
     let result = sectionData.map(section => {
         return {
+            id: section.id,
             index: section.section_index,
             type: section.type,
             limit: section.time_limit,
-            required: section.required,
-            ids: section.sort_ids
+            required: section.required
         }
     });
 

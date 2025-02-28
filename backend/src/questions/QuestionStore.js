@@ -100,6 +100,16 @@ class Question {
 class QuestionStore {
     static questions = [];
 
+    // Get data about a question given the section it resides in
+    static async GetQuestionData(sectionId) {
+        let data = await Database.Query("SELECT type, sort_ids FROM `sections` WHERE id=?", [sectionId]);
+        
+        return {
+            type: data[0].type,
+            sorts: data[0].sort_ids.split(",").map(Number)
+        };
+    }
+
     // Register a question (expires in 5 seconds if nothing is done with it)
     static async RegisterQuestion(req, res) {
         // Generate a random ID (that has not been taken)
@@ -108,23 +118,18 @@ class QuestionStore {
             id = generateRandomString(5);
         } while (this.questions.reduce((a, b)=>a || (b.id == id), false));
 
-        // Get the question
-        const { sorts, type } = req.body;
+        // Get information about the question
+        let { type, sorts } = await this.GetQuestionData(req.body.id);
         const question = new Question(id, sorts, type);
         
         // Add it to the list
         this.questions.push(question);
 
-        /* TODO: Implement this using progress */
-
         // Get the question data and introductions (if applicable)
         const data = await question.Names();
-        //const introductions = await question.Introductions(seen);
+        const introductions = await question.Introductions([]);
 
-        res.json([data, [
-            [],
-            []
-        ]]);
+        res.json([data, introductions, type]);
     }
 
     // Delete a question
