@@ -72,12 +72,3 @@ https.createServer({
     key: fs.readFileSync('../frontend/cert.key'),
     cert: fs.readFileSync('../frontend/cert.crt')
 }, app).listen(3001);
-
-
-/*
-Data in the form
-{
-    lastLevel: INTEGER,     // The last level you completed
-    seen: [INTEGER]         // ID of the explanations you have seen
-}
-*/

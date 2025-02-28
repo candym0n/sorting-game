@@ -53,20 +53,11 @@ const Game = React.memo(function Game({ setExplanation, sectionData, showAnswers
                 },
                 body: JSON.stringify({
                     sorts: sectionData.ids.split(","),
-                    type: sectionData.type,
-                    seen: data?.data?.seen || []
+                    type: sectionData.type
                 })
             }).then(a=>a.json());
             setQuestion(response[0]);
             setTexts(response[1][0]);
-            setData(prev => ({
-                logged_in: prev.logged_in,
-                name: prev.name,
-                data: {
-                    lastLevel: prev?.data?.lastLevel,
-                    seen: [...(prev?.data?.seen || []), ...response[1][1]]
-                }
-            }))
         } catch(err) {
             setError(err.message);
         } finally {

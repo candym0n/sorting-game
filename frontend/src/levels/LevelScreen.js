@@ -56,14 +56,6 @@ export default function LevelScreen() {
     const nextSection = () => {
         if (currentSection + 1 >= sections.length) {
             navigate("/level-select");
-            setData(prev=>({
-                logged_in: prev.logged_in,
-                name: prev.name,
-                data: {
-                    lastLevel: Math.max(level, prev.data?.lastLevel || 0),
-                    seen: [...(prev.data?.seen || [])]
-                }
-            }));
         } else {
             setCurrentSection(a=>++a);
         }

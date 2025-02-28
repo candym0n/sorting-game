@@ -7,7 +7,8 @@ import { useContext } from "react";
 export default function LevelSelectButton({ index, name, score = 1 }) {
     const { data } = useContext(Auth.Context);
 
-    const locked = ((data.data?.lastLevel || 0) + 1) < index;
+    /* TODO: Fix this */
+    const locked = false;
 
     const renderStars = (count) => {
         const stars = [];

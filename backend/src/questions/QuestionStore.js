@@ -109,18 +109,22 @@ class QuestionStore {
         } while (this.questions.reduce((a, b)=>a || (b.id == id), false));
 
         // Get the question
-        const { sorts, type, seen } = req.body;
+        const { sorts, type } = req.body;
         const question = new Question(id, sorts, type);
         
         // Add it to the list
         this.questions.push(question);
 
+        /* TODO: Implement this using progress */
+
         // Get the question data and introductions (if applicable)
         const data = await question.Names();
-        
-        const introductions = await question.Introductions(seen);
+        //const introductions = await question.Introductions(seen);
 
-        res.json([data, introductions]);
+        res.json([data, [
+            [],
+            []
+        ]]);
     }
 
     // Delete a question

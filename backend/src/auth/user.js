@@ -22,7 +22,7 @@ class User {
     }
     
     static async createUser(name, hashedPassword) {
-        const result = await Database.Query("INSERT INTO `users` (`name`, `password`, `data`) VALUES (?,?,'{}'); SELECT `id` FROM `users` WHERE `name` = ?", [name, hashedPassword, name]);
+        const result = await Database.Query("INSERT INTO `users` (`name`, `password`) VALUES (?,?); SELECT `id` FROM `users` WHERE `name` = ?", [name, hashedPassword, name]);
         return result[1][0].id;
     }
 }
