@@ -62,15 +62,18 @@ class UserController {
         }
     }
 
+    /**
+     * DON'T JUDGE ME.
+     * I'M SERIOUS
+     */
     static async save(req, res) {
         const token = req.session.token;
         if (token) {
             try {
                 const decoded = jwt.verify(token, process.env.SECRET_KEY);
-                await User.changeUserSave(decoded.id, req.body);
-                /* Implement saving logic */
-                res.status(500).json({
-                    error: "Not implemented"
+                await Database.Query("INSERT INTO progress (user_id, level_id, score) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE score=?", decoded.id, req.body.level, req.body.score);
+                res.status(200).json({
+                    message: "Alright....."
                 })
             } catch (error) {
                 res.status(500).json({ error: 'Unauthorized: ' + req.session.token + ", error is " + error });
@@ -123,12 +126,12 @@ class UserController {
             try {
                 const decoded = await jwt.verify(token, process.env.SECRET_KEY);
                 let user = await User.getUserById(decoded.id);
-                res.status(200).json({ result: user.name });
+                res.status(200).json({ name: user.name, id: user.id });
             } catch (error) {
-                res.status(401).json({ result: "" });
+                res.status(401).json({ result: "Not authorized. More info: " + error });
             }
         } else {
-            res.status(401).json({ result: "" });
+            res.status(401).json({ error: "NOT AUTHORIZED" });
         }
     }
 

@@ -7,7 +7,8 @@ import { useContext } from "react";
 export default function LevelSelectButton({ index }) {
     const { data } = useContext(Auth.Context);
 
-    const levelData = data.levelData.find(a => a.id == index);
+    console.log(data,)
+    const levelData = data.levelData.find(a => a.index == index);
     const locked = index != 1 && !levelData;
 
     const renderStars = (count) => {
@@ -15,9 +16,8 @@ export default function LevelSelectButton({ index }) {
         for (let i = 0; i < 3; i++) {
             if (i < count) {
                 stars.push(
-                    <Col>
+                    <Col key={i}>
                         <Star
-                            key={i}
                             className="w-100 h-100"
                             fill="yellow"
                             strokeWidth={1}
@@ -26,9 +26,8 @@ export default function LevelSelectButton({ index }) {
                 );
             } else {
                 stars.push(
-                    <Col>
+                    <Col key={i}>
                         <Star
-                            key={i}
                             className="w-100 h-100"
                         />
                     </Col>

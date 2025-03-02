@@ -19,8 +19,8 @@ const ErrorScreen = ({ error, onRetry }) => (
     <div className="min-h-screen bg-gray-200 d-flex align-items-center justify-content-center">
         <div className="text-center">
             <div className="text-danger mb-3">Error loading metadata: {error}</div>
-                <Button variant="primary" onClick={onRetry}>Retry</Button>
-            </div>
+            <Button variant="primary" onClick={onRetry}>Retry</Button>
+        </div>
     </div>
 );
 
@@ -35,14 +35,17 @@ export default function LevelScreen() {
     const { data, setData } = useContext(Auth.Context);
     const navigate = useNavigate();
 
+    // For calculating the score of this level (changes at the end of every section and written to the database after the last)
+    const [score, setScore] = useState(0);
+
     const fetchData = async () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`https://localhost:3001/get-sections?level=${level}`).then(a=>a.json());
+            const response = await fetch(`https://localhost:3001/get-sections?level=${level}`).then(a => a.json());
             setSections(response);
             setCurrentSection(0);
-        } catch(err) {
+        } catch (err) {
             setError(err.message);
         } finally {
             setLoading(false);
@@ -55,13 +58,24 @@ export default function LevelScreen() {
 
     const nextSection = () => {
         if (currentSection + 1 >= sections.length) {
+            setData(prev => ({
+                logged_in: prev.logged_in,
+                name: prev.name,
+                levelData: [...prev.levelData, {
+                    index: Number(level),
+                    score
+                }, {
+                    index: Number(level) + 1,
+                    score: 0
+                }]
+            }));
             navigate("/level-select");
         } else {
-            setCurrentSection(a=>++a);
+            setCurrentSection(a => ++a);
         }
     }
 
-    if ((data.data?.lastLevel || 0) + 1 < level) {
+    if (level != 1 && !data.levelData.some(a => a.index == level)) {
         if (!cheaterCaught) {
             alert("Stop it, cheater. You are only on level " + (data.data?.lastLevel || 1) + "! Catch up!");
             setCheaterCaught(true);
@@ -70,7 +84,7 @@ export default function LevelScreen() {
         return <></>;
     }
     let mainBody = (
-        <div className="bg-gray-200 p-4" style={{height: "100%"}}>
+        <div className="bg-gray-200 p-4" style={{ height: "100%" }}>
             <Container className="py-8 h-100">
                 <Card>
                     <Card.Header className="d-flex align-items-center">
@@ -82,10 +96,15 @@ export default function LevelScreen() {
                         </h1>
                     </Card.Header>
                     <Card.Body>
-                        <SectionScreen canProceed={canProceed} setCanProceed={setCanProceed} sectionData={sections[currentSection]}/>
+                        <SectionScreen
+                            canProceed={canProceed}
+                            setCanProceed={setCanProceed}
+                            sectionData={sections[currentSection]}
+                            setScore={setScore}
+                        />
                     </Card.Body>
                     <Card.Footer>
-                        <Button onClick={nextSection} disabled={!canProceed} style={{width:"100%"}}>Next Section</Button>
+                        <Button onClick={nextSection} disabled={!canProceed} style={{ width: "100%" }}>Next Section</Button>
                     </Card.Footer>
                 </Card>
             </Container>
@@ -93,6 +112,6 @@ export default function LevelScreen() {
     );
 
     return error ? <ErrorScreen error={error} onRetry={fetch} /> :
-            loading ? <LoadingScreen /> :
+        loading ? <LoadingScreen /> :
             mainBody;
 }

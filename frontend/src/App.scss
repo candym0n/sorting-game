@@ -24,6 +24,8 @@ a[aria-disabled="true"] {
 
 body {
     background-color: darken(navy, 20);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .level-select-button[aria-disabled="true"] {

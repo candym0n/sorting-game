@@ -44,7 +44,7 @@ const Game = React.memo(function Game({ sectionId, setExplanation, showAnswers, 
             setStarted(false);
             setLoading(true);
             setError(null);
-            setReadIntro(false);
+            setReadIntro(true); // Don't show introductions right not. Fix this later.
             const response = await fetch(`https://localhost:3001/question/register`, {
                 method: "POST",
                 credentials: "include",
