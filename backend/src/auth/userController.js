@@ -65,13 +65,15 @@ class UserController {
     /**
      * DON'T JUDGE ME.
      * I'M SERIOUS
+     * I DON'T CARE IF YOU JUST RANDOMLY SEND AN HTTP REQUEST TO PRETEND
+     * LIKE YOU COMPLETED A LEVEL YOU DIDN'T...1
      */
     static async save(req, res) {
         const token = req.session.token;
         if (token) {
             try {
                 const decoded = jwt.verify(token, process.env.SECRET_KEY);
-                await Database.Query("INSERT INTO progress (user_id, level_id, score) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE score=?", decoded.id, req.body.level, req.body.score);
+                await Database.Query("INSERT INTO progress (user_id, level_id, score) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE score=?", [decoded.id, req.body.level, req.body.score, req.body.score]);
                 res.status(200).json({
                     message: "Alright....."
                 })
@@ -95,19 +97,10 @@ class UserController {
         if (token) {
             try {
                 const decoded = await jwt.verify(token, process.env.SECRET_KEY);
-                let data = await User.getUserDataById(decoded.id);
                 let user = await User.getUserById(decoded.id);
-                const levels = await Database.Query("SELECT id, name, level_index FROM `levels` ORDER BY level_index ASC");
+                const levels = await Database.Query("SELECT p.score, l.level_index FROM progress p JOIN levels l ON p.level_id = l.id WHERE p.user_id = ?", [decoded.id]);
                 res.status(200).json({
-                    data: levels.map(level => {
-                        let locked = !data.some(a => a.level_id == level.id);
-                        return {
-                            name: level.name,
-                            index: level.level_index,
-                            locked,
-                            score: !locked && level.score
-                        };
-                    }),
+                    data: levels,
                     name: user.name
                 });
             } catch (error) {

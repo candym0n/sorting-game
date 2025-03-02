@@ -32,7 +32,7 @@ export default function LevelScreen() {
     const [currentSection, setCurrentSection] = useState(0);
     const [canProceed, setCanProceed] = useState(false);
     const [cheaterCaught, setCheaterCaught] = useState(false);
-    const { data, setData } = useContext(Auth.Context);
+    const { data, addLevelData } = useContext(Auth.Context);
     const navigate = useNavigate();
 
     // For calculating the score of this level (changes at the end of every section and written to the database after the last)
@@ -58,17 +58,7 @@ export default function LevelScreen() {
 
     const nextSection = () => {
         if (currentSection + 1 >= sections.length) {
-            setData(prev => ({
-                logged_in: prev.logged_in,
-                name: prev.name,
-                levelData: [...prev.levelData, {
-                    index: Number(level),
-                    score
-                }, {
-                    index: Number(level) + 1,
-                    score: 0
-                }]
-            }));
+            addLevelData(Number(level), score);
             navigate("/level-select");
         } else {
             setCurrentSection(a => ++a);

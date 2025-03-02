@@ -12,7 +12,7 @@ export default function Login() {
     const [searchParams, setSearchParams] = useSearchParams();
     const dataParam = searchParams.get('data');
     const navigate = useNavigate();
-    const {data, setData } = useContext(Auth.Context);
+    const {data, setLoginData } = useContext(Auth.Context);
 
     useEffect(() => {
         if (!dataParam) return;
@@ -45,10 +45,7 @@ export default function Login() {
                 alert(result.error);
             } else if (result.name) {
                 alert("Welcome back, " + result.name + "!");
-                setData({
-                    logged_in: true,
-                    name: result.name
-                });
+                setLoginData(true, result.name);
                 navigate("/level-select");
             } else {
                 console.log(result);

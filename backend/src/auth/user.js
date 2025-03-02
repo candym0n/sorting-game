@@ -13,6 +13,7 @@ class User {
 
     static async deleteUser(id) {
         await Database.Query("DELETE FROM `users` WHERE `id` = ?", [id]);
+        await Database.Query("DELETE FROM `progress` WHERE user_id=?", [id]);
         return id;
     }
     

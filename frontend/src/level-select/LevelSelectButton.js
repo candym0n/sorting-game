@@ -7,9 +7,8 @@ import { useContext } from "react";
 export default function LevelSelectButton({ index }) {
     const { data } = useContext(Auth.Context);
 
-    console.log(data,)
-    const levelData = data.levelData.find(a => a.index == index);
-    const locked = index != 1 && !levelData;
+    const levelData = data.levelData.find(a => a.level_index == index);
+    const locked = index != 1 && !data.levelData.find(a => a.level_index == index - 1);
 
     const renderStars = (count) => {
         const stars = [];
@@ -38,27 +37,25 @@ export default function LevelSelectButton({ index }) {
     };
 
     return (
-        <OverlayTrigger placement="top" overlay={<Tooltip>{levelData?.name}</Tooltip>}>
-            <Col className="justify-content-md-center">
-                <Row className="justify-content-md-center">
-                    <Button
-                        disabled={locked}
-                        className="position-relative level-select-button"
-                        as={Link}
-                        to={`/level/${index}`}
-                    >
-                        {
-                            locked ? <Lock style={{ width: "50%", height: "50%" }} /> :
-                                <span>{index}</span>
-                        }
-                    </Button>
-                </Row>
-                {!locked && <Row className="justify-content-md-center">
-                    <Col />
-                    {renderStars(levelData?.score)}
-                    <Col />
-                </Row>}
-            </Col>
-        </OverlayTrigger>
+        <Col className="justify-content-md-center">
+            <Row className="justify-content-md-center">
+                <Button
+                    disabled={locked}
+                    className="position-relative level-select-button"
+                    as={Link}
+                    to={`/level/${index}`}
+                >
+                    {
+                        locked ? <Lock style={{ width: "50%", height: "50%" }} /> :
+                            <span>{index}</span>
+                    }
+                </Button>
+            </Row>
+            {!locked && <Row className="justify-content-md-center">
+                <Col />
+                {renderStars(levelData?.score)}
+                <Col />
+            </Row>}
+        </Col>
     )
 }
