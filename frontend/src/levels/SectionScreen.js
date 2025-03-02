@@ -96,7 +96,7 @@ function calculateScore(incorrectCount, meanTime, totalTime) {
     finalScore = gradeBoundaries[currentBracket] + curvedProgressInBracket * 0.75;
 console.log("Incorrect: " + incorrectCount + ", meanTime: " + meanTime + ", totalTime: " + totalTime + " resulted in " + finalScore);
     // Round to no decimal places for cleaner output
-    return Math.round(finalScore);
+    return Math.floor(finalScore);
 }
 
 export default function SectionScreen({ setScore, sectionData, canProceed, setCanProceed }) {
@@ -198,6 +198,7 @@ export default function SectionScreen({ setScore, sectionData, canProceed, setCa
                     gotCorrect={onCorrect}
                     gotIncorrect={onIncorrect}
                     started={started}
+                    showAnswers={answered}
                 />
             </div>
             {

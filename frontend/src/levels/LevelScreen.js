@@ -65,7 +65,7 @@ export default function LevelScreen() {
         }
     }
 
-    if (level != 1 && !data.levelData.some(a => a.index == level)) {
+    if (level != 1 && !data.levelData.some(a => a.level_index == level - 1)) {
         if (!cheaterCaught) {
             alert("Stop it, cheater. You are only on level " + (data.data?.lastLevel || 1) + "! Catch up!");
             setCheaterCaught(true);
